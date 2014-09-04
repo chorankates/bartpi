@@ -47,7 +47,9 @@ public class BartPI {
 				destinationCode, time, howManyTripsBefore, howManyTripsAfter);
 
 		try {
-			HashMap<String, String> response = callBART("sched", url);
+			String xml = callBART("sched", url);
+
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -64,18 +66,17 @@ public class BartPI {
 				destinationCode, time, howManyTripsBefore, howManyTripsAfter);
 
 		try {
-			HashMap<String, String> response = callBART("sched", url);
+			String xml = callBART("sched", url);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public HashMap<String, String> callBART(String method, String query)
+	public String callBART(String method, String query)
 			throws IOException {
 		// callBART() with a query, the endpoint and key (and trailing &) will
 		// be prepended to your query
-		HashMap<String, String> parsed_response = null;
 
 		String url = String.format("%s/%s.aspx?%s&key=%s", this.BARTendpoint,
 				method, query, this.BARTkey);
@@ -107,74 +108,22 @@ public class BartPI {
 		// print result
 		System.out.println("Response : " + response.toString());
 
-		parsed_response = parseXML(response.toString(), method);
-		return parsed_response;
+		return response.toString();
 	}
 
-    // input should be a string of XML, key being the parent key of the hash you want returned
-	public HashMap<String, String> parseXML(String input, String key) {
 
-        // TODO this is the wrong input pattern
-        key = "stations";
+	public Stations getStations() {
+        String response = null;
 
 		try {
-			DocumentBuilder db = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
-			InputSource is = new InputSource();
-			is.setCharacterStream(new StringReader(input));
-			
-			//Document doc = db.parse(is);
-            Document doc = db.parse(new InputSource(new StringReader(input)));
+			response = callBART("stn", "cmd=stns");
 
-            NodeList nodes = doc.getDocumentElement().getChildNodes();
-			
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Element element = (Element) nodes.item(i);
-				System.out.println(String.format("element: %s",
-                        element.getTagName()));
-
-                // TODO we probably need to do this in a more isolated area..
-                if (element.getTagName().equals("stations")) {
-                    NodeList childNodes = element.getChildNodes();
-
-                    for (int j = 0; j < childNodes.getLength(); j++) {
-                        Element childElement = (Element) childNodes.item(j);
-
-                        System.out.println(String.format("childElement: %s",
-                                childElement.getTagName()));
-
-                        NodeList grandChildNodes = childElement.getChildNodes();
-
-                        for (int k = 0; k < grandChildNodes.getLength(); k++) {
-                            Element grandChildElement = (Element) grandChildNodes.item(k);
-                            System.out.println(String.format("grandChildElement: %s:%s",
-                                    grandChildElement.getNodeName(),
-                                    grandChildElement.getTextContent()));
-                        }
-
-                        System.out.println(String.format("childElement: %s", childElement.getNodeValue()));
-                    }
-                }
-
-			}
-			System.out.println("foo");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) { 
-			// TODO who cares
-		}		
-		
-		return null;
-	}
-
-	public void stations() {
-		try {
-			HashMap<String, String> response = callBART("stn", "cmd=stns");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+        return new Stations(response);
 	}
 
 }
