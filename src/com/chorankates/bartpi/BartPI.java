@@ -22,28 +22,36 @@ public class BartPI {
 
 	private final String USER_AGENT = "Mozilla/5.0";
 	public String BARTendpoint = "http://api.bart.gov/api";
-	public String BARTkey = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's
+	private String BARTkey = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's public
+	public Stations stations = null;
 
 	// TODO we should probably get station information during object instantiation
 	BartPI() {
-		System.out.println(String.format("using shared key[%s]", this.BARTkey));
+        System.out.println(String.format("using shared key[%s]", this.BARTkey));
+        stations = this.getStations();
 	}
 
 	BartPI(String key) {
 		this.BARTkey = key;
 		System.out.println(String.format("using key[%s]", this.BARTkey));
+        stations = this.getStations();
 	}
 
-	// TODO use station names?
-	public Arrivals arrivals(String originCode, String destinationCode) {
-		// TODO should probably have a way for users to control these..
+	// TODO use station names? how can we lookup station abbrevs/names here without doing another lookup? or can make it a class attribute
+	public Arrivals arrivals(String origin, String destination) {
+
+        // if passed the name, convert to abbreviation -- if not a known name, assume abbrevivated already
+        String originAbbreviation      = stations.getStationNames().contains(origin) ? stations.stationNameToAbbreviation(origin) : origin;
+        String destinationAbbreviation = stations.getStationNames().contains(destination) ? stations.stationNameToAbbreviation(destination) : destination;
+
+		// TODO should probably have a way for users to control these (or at least trips before/after).. probably a global setting, so should make it part of this object
 		String time = "now";
 		int howManyTripsBefore = 0;
 		int howManyTripsAfter = 3;
 
 		String url = String.format(
-				"cmd=arrive&orig=%s&dest=%s&time=%s&b=%s&a=%s", originCode,
-				destinationCode, time, howManyTripsBefore, howManyTripsAfter);
+				"cmd=arrive&orig=%s&dest=%s&time=%s&b=%s&a=%s", originAbbreviation,
+				destinationAbbreviation, time, howManyTripsBefore, howManyTripsAfter);
 		String xml = null;
 
 		try {
@@ -55,14 +63,20 @@ public class BartPI {
 		return new Arrivals(xml);
 	}
 
-	public Departures departures(String originCode, String destinationCode) {
+	public Departures departures(String origin, String destination) {
+
+        // if passed the name, convert to abbreviation -- if not a known name, assume abbreviated already
+        String originAbbreviation      = stations.getStationNames().contains(origin) ? stations.stationNameToAbbreviation(origin) : origin;
+        String destinationAbbreviation = stations.getStationNames().contains(destination) ? stations.stationNameToAbbreviation(destination) : destination;
+
+        // TODO same as above..
 		String time = "now";
 		int howManyTripsBefore = 0;
 		int howManyTripsAfter = 3;
 
 		String url = String.format(
-				"cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s", originCode,
-				destinationCode, time, howManyTripsBefore, howManyTripsAfter);
+				"cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s", originAbbreviation,
+				destinationAbbreviation, time, howManyTripsBefore, howManyTripsAfter);
 		String xml = null;
 		
 		try {
@@ -115,6 +129,11 @@ public class BartPI {
 
 
 	public Stations getStations() {
+        // TODO smarter caching..
+        if (this.stations != null) {
+            return this.stations;
+        }
+
         String response = null;
 
 		try {
