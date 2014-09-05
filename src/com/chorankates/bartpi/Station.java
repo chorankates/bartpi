@@ -2,8 +2,6 @@ package com.chorankates.bartpi;
 
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
-
 /**
  * Created by conor on 9/4/14.
  */

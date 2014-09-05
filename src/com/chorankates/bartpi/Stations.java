@@ -1,13 +1,8 @@
 package com.chorankates.bartpi;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -67,7 +62,7 @@ public class Stations {
         return results;
     }
 
-    public String stationAbbreviationToName(String stationAbbreviation) {
+    public String stationAbbreviationToName(String stationAbbreviation) throws IOException {
         for (String name : stationCollection.keySet()) {
             Station station = stationCollection.get(name);
             if (station.getAbbreviation().equals(stationAbbreviation)) {
@@ -75,22 +70,19 @@ public class Stations {
             }
         }
 
-        // TODO throw an exception here
-        return "";
+        throw new IOException(String.format("unable to find station name from abbreviation [%s]", stationAbbreviation));
     }
 
-    public String stationNameToAbbreviation(String stationName) {
+    public String stationNameToAbbreviation(String stationName) throws IOException {
         for (String name : stationCollection.keySet()) {
             Station station = stationCollection.get(name);
             if (station.getName().equals(stationName)) {
                 return station.getAbbreviation();
             }
         }
-        // TODO throw an exception here
-        return "";
+        throw new IOException(String.format("unable to find station abbreviation from name [%s]", stationName));
     }
 
-    // TODO it seems silly to get this every time, but we definitely need it - can we just make it an internal resource with a manual update knob?
     public Stations (String xml) {
 
         try {
@@ -116,7 +108,6 @@ public class Stations {
                         NodeList grandChildNodes = childElement.getChildNodes();
                         Station newStation = new Station();
 
-                        // TODO we can probably grab them by name here, right?
                         for (int k = 0; k < grandChildNodes.getLength(); k++) {
                             Element grandChildElement = (Element) grandChildNodes.item(k);
                             log.trace(String.format("grandChildElement: %s:%s",

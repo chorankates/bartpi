@@ -3,20 +3,8 @@ package com.chorankates.bartpi;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
-
 import org.apache.log4j.Logger;
 
 public class BartPI {
@@ -41,10 +29,9 @@ public class BartPI {
         stations = this.getStations();
 	}
 
-	// TODO use station names? how can we lookup station abbrevs/names here without doing another lookup? or can make it a class attribute
-	public Arrivals arrivals(String origin, String destination) {
+	public Arrivals getArrivals(String origin, String destination) throws IOException {
 
-        // if passed the name, convert to abbreviation -- if not a known name, assume abbrevivated already
+        // if passed the name, convert to abbreviation -- if not a known name, assume abbreviated already
         String originAbbreviation      = stations.getStationNames().contains(origin) ? stations.stationNameToAbbreviation(origin) : origin;
         String destinationAbbreviation = stations.getStationNames().contains(destination) ? stations.stationNameToAbbreviation(destination) : destination;
 
@@ -67,7 +54,7 @@ public class BartPI {
 		return new Arrivals(xml);
 	}
 
-	public Departures departures(String origin, String destination) {
+	public Departures getDepartures(String origin, String destination) throws IOException {
 
         // if passed the name, convert to abbreviation -- if not a known name, assume abbreviated already
         String originAbbreviation      = stations.getStationNames().contains(origin) ? stations.stationNameToAbbreviation(origin) : origin;
@@ -91,6 +78,26 @@ public class BartPI {
 		}
 		
 		return new Departures(xml);
+	}
+	
+	public Stations getStations() {
+        // TODO smarter caching..
+        if (this.stations != null) {
+            log.debug("using cached station information");
+            return this.stations;
+        }
+
+        String response = null;
+
+		try {
+			response = callBART("stn", "cmd=stns");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+        return new Stations(response);
 	}
 
 	public String callBART(String method, String query)
@@ -125,27 +132,6 @@ public class BartPI {
 		log.debug(String.format("response (%s) [%s]", response.length(), response.toString()));
 
 		return response.toString();
-	}
-
-
-	public Stations getStations() {
-        // TODO smarter caching..
-        if (this.stations != null) {
-            log.debug("using cached station information");
-            return this.stations;
-        }
-
-        String response = null;
-
-		try {
-			response = callBART("stn", "cmd=stns");
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-        return new Stations(response);
 	}
 
 }

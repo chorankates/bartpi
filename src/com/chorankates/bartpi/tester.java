@@ -1,11 +1,13 @@
 package com.chorankates.bartpi;
 
+import java.io.IOException;
+
 import org.junit.*;
 
 public class tester {
 
 	@Test
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		BartPI bpi = new BartPI();
 
         Stations stations = bpi.getStations();
@@ -24,7 +26,7 @@ public class tester {
             Assert.assertEquals(stations.stationNameToAbbreviation(name), station.getAbbreviation());
         }
 
-		Arrivals arrivals = bpi.arrivals("Embarcadero", "Powell St."); // for trips arriving based on specified time (NOW)
+		Arrivals arrivals = bpi.getArrivals("Embarcadero", "Powell St."); // for trips arriving based on specified time (NOW)
 
         for (Arrival arrival : arrivals.getArrivals()) {
             System.out.println(String.format("[%s->%s] [%s->%s] ($ %s) (%s)",
@@ -37,7 +39,7 @@ public class tester {
                     ));
         }
 
-		Departures departures = bpi.departures("Embarcadero", "Powell St."); // for trips departing based on specified time (NOW)
+		Departures departures = bpi.getDepartures("Embarcadero", "Powell St."); // for trips departing based on specified time (NOW)
 
         for (Departure departure : departures.getDepartures()) {
             System.out.println(String.format("[%s->%s] [%s->%s] ($ %s) (%s)",
