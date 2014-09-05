@@ -84,10 +84,7 @@ public class Stations {
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder();
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(xml));
 
-            //Document doc = db.parse(is);
             Document doc = db.parse(new InputSource(new StringReader(xml)));
 
             NodeList nodes = doc.getDocumentElement().getChildNodes();

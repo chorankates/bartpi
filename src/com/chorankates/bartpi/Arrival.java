@@ -16,7 +16,7 @@ public class Arrival {
     String destTimeMin;
     String destTimeDate;
 
-    ArrayList<HashMap<String, String>> legs = new ArrayList<HashMap<String, String>>();
+    ArrayList<Leg> legs = new ArrayList<Leg>();
 
     public Arrival () {
         // allow this to be built up incrementally
@@ -62,5 +62,10 @@ public class Arrival {
     public String getDestTimeDate() {
         return destTimeDate;
     }
+
+	public void addLeg(Leg newLeg) {
+        System.out.println(String.format("adding leg[%s] [%s->%s]", newLeg.getOrder(), newLeg.getOrigin(), newLeg.getDestination()));
+		legs.add(newLeg);
+	}
 
 }

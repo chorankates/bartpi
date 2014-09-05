@@ -24,8 +24,8 @@ public class tester {
             Assert.assertEquals(stations.stationNameToAbbreviation(name), station.getAbbreviation());
         }
 
-		Arrivals arrivals     = bpi.arrivals("EMBR", "POWL"); // for trips arriving based on specified time (NOW)
-		Departures departures = bpi.departures("EMBR", "POWL"); // for trips departing based on specified time (NOW)
+		Arrivals arrivals     = bpi.arrivals("Embarcadero", "Powell St."); // for trips arriving based on specified time (NOW)
+		Departures departures = bpi.departures("Embarcadero", "Powell St."); // for trips departing based on specified time (NOW)
 	}
 
 	

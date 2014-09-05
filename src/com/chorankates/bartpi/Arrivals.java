@@ -31,17 +31,14 @@ public class Arrivals {
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder();
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(xml));
 
-            //Document doc = db.parse(is);
             Document doc = db.parse(new InputSource(new StringReader(xml)));
 
             NodeList nodes = doc.getDocumentElement().getChildNodes();
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-//                System.out.println(String.format("element: %s", element.getTagName()));
+                System.out.println(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("schedule")) {
                     NodeList childNodes = element.getChildNodes();
@@ -58,27 +55,51 @@ public class Arrivals {
                             for (int k = 0; k < grandChildNodes.getLength(); k++) {
                                 Element grandChildElement = (Element) grandChildNodes.item(k);
 
-//                                System.out.println(String.format("grandChildElement: %s", grandChildElement.getTagName()));
+                                System.out.println(String.format("grandChildElement: %s", grandChildElement.getTagName()));
 
                                 NodeList greatGrandChildrenNodes = grandChildElement.getChildNodes();
 
-                                Arrival newArrival = new Arrival();
+                                if (grandChildElement.getTagName().equals("trip")) {
 
-                                for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
-                                    Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
+                                    Arrival newArrival = new Arrival();
 
-//                                    System.out.println(String.format("greatGrandChildElement: %s:%s",
-//                                            greatGrandChildElement.getTagName(),
-//                                            greatGrandChildElement.getTextContent()));
+                                    newArrival.origin       = grandChildElement.getAttributeNode("origin").getNodeValue();
+                                    newArrival.destination  = grandChildElement.getAttributeNode("destination").getNodeValue();
+                                    newArrival.fare         = grandChildElement.getAttributeNode("fare").getNodeValue();
+                                    newArrival.origTimeMin  = grandChildElement.getAttributeNode("origTimeMin").getNodeValue();
+                                    newArrival.origTimeDate = grandChildElement.getAttributeNode("origTimeDate").getNodeValue();
+                                    newArrival.destTimeMin  = grandChildElement.getAttributeNode("destTimeMin").getNodeValue();
+                                    newArrival.destTimeDate = grandChildElement.getAttributeNode("destTimeDate").getNodeValue();
 
-                                    if (grandChildElement.getTagName().equals("origin")) {
-                                        newArrival.origin = grandChildElement.getTextContent();
-                                    } else if (grandChildElement.getTagName().equals("destination")) {
-                                        newArrival.destination = grandChildElement.getTextContent();
+                                    for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
+                                        Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
+
+                                        System.out.println(String.format("greatGrandChildElement: %s",
+                                                greatGrandChildElement.getTagName()));
+
+
+                                        if (greatGrandChildElement.getTagName().equals("leg")) {
+                                            Leg newLeg = new Leg();
+
+                                            newLeg.order = greatGrandChildElement.getAttributeNode("order").getNodeValue();
+                                            newLeg.transferCode = greatGrandChildElement.getAttributeNode("transfercode").getNodeValue();
+                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin").getNodeValue(); // TODO this is a code, should we auto convert? no - do that on render
+                                            newLeg.destination = greatGrandChildElement.getAttributeNode("destination").getNodeValue();
+                                            newLeg.origTimeMin = greatGrandChildElement.getAttributeNode("origTimeMin").getNodeValue();
+                                            newLeg.origTimeDate = greatGrandChildElement.getAttributeNode("origTimeDate").getNodeValue();
+                                            newLeg.destTimeMin = greatGrandChildElement.getAttributeNode("destTimeMin").getNodeValue();
+                                            newLeg.destTimeDate = greatGrandChildElement.getAttributeNode("destTimeDate").getNodeValue();
+                                            newLeg.line = greatGrandChildElement.getAttributeNode("line").getNodeValue();
+                                            newLeg.bikeFlag = greatGrandChildElement.getAttributeNode("bikeflag").getNodeValue();
+                                            newLeg.trainHeadStation = greatGrandChildElement.getAttributeNode("trainHeadStation").getNodeValue();
+                                            newLeg.trainIdx = greatGrandChildElement.getAttributeNode("trainIdx").getNodeValue();
+
+                                            newArrival.addLeg(newLeg);
+                                        }
                                     }
-                                }
 
-                                arrivalCollection.add(newArrival);
+                                    arrivalCollection.add(newArrival);
+                                }
                             }
                         }
                     }
