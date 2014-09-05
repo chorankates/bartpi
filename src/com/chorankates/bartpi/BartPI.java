@@ -24,8 +24,7 @@ public class BartPI {
 	public String BARTendpoint = "http://api.bart.gov/api";
 	public String BARTkey = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's
 
-	// public..
-
+	// TODO we should probably get station information during object instantiation
 	BartPI() {
 		System.out.println(String.format("using shared key[%s]", this.BARTkey));
 	}

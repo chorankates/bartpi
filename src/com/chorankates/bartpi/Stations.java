@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -17,6 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+// TODO make a better toString
 
 /**
  * Created by conor on 9/4/14.
@@ -29,6 +31,54 @@ public class Stations {
         return stationCollection.get(name);
     }
 
+    public HashMap<String, Station> getStations() { return stationCollection; }
+
+    public ArrayList<String> getStationNames() {
+        ArrayList<String> results = new ArrayList<String>();
+
+        for (String name : stationCollection.keySet()) {
+            Station station = stationCollection.get(name);
+            results.add(station.getName());
+        }
+
+        return results;
+    }
+
+    public ArrayList<String> getStationAbbreviations() {
+        ArrayList<String> results = new ArrayList<String>();
+
+        for (String name : stationCollection.keySet()) {
+            Station station = stationCollection.get(name);
+            results.add(station.getAbbreviation());
+        }
+
+        return results;
+    }
+
+    public String stationAbbreviationToName(String stationAbbreviation) {
+        for (String name : stationCollection.keySet()) {
+            Station station = stationCollection.get(name);
+            if (station.getAbbreviation().equals(stationAbbreviation)) {
+                return station.getName();
+            }
+        }
+
+        // TODO throw an exception here
+        return "";
+    }
+
+    public String stationNameToAbbreviation(String stationName) {
+        for (String name : stationCollection.keySet()) {
+            Station station = stationCollection.get(name);
+            if (station.getName().equals(stationName)) {
+                return station.getAbbreviation();
+            }
+        }
+        // TODO throw an exception here
+        return "";
+    }
+
+    // TODO it seems silly to get this every time, but we definitely need it - can we just make it an internal resource with a manual update knob?
     public Stations (String xml) {
 
         try {
@@ -44,8 +94,7 @@ public class Stations {
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-                System.out.println(String.format("element: %s",
-                        element.getTagName()));
+                //System.out.println(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("stations")) {
                     NodeList childNodes = element.getChildNodes();
@@ -53,8 +102,7 @@ public class Stations {
                     for (int j = 0; j < childNodes.getLength(); j++) {
                         Element childElement = (Element) childNodes.item(j);
 
-                        System.out.println(String.format("childElement: %s",
-                                childElement.getTagName()));
+                        //System.out.println(String.format("childElement: %s", childElement.getTagName()));
 
                         NodeList grandChildNodes = childElement.getChildNodes();
                         Station newStation = new Station();
@@ -62,9 +110,9 @@ public class Stations {
                         // TODO we can probably grab them by name here, right?
                         for (int k = 0; k < grandChildNodes.getLength(); k++) {
                             Element grandChildElement = (Element) grandChildNodes.item(k);
-                            System.out.println(String.format("grandChildElement: %s:%s",
-                                    grandChildElement.getTagName(),
-                                    grandChildElement.getTextContent()));
+//                            System.out.println(String.format("grandChildElement: %s:%s",
+//                                    grandChildElement.getTagName(),
+//                                    grandChildElement.getTextContent()));
 
                             if (grandChildElement.getTagName().equals("name")) {
                                 newStation.name = grandChildElement.getTextContent();
@@ -95,8 +143,5 @@ public class Stations {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-
 }

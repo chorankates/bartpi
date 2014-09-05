@@ -41,8 +41,7 @@ public class Arrivals {
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-                System.out.println(String.format("element: %s",
-                        element.getTagName()));
+//                System.out.println(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("schedule")) {
                     NodeList childNodes = element.getChildNodes();
@@ -59,8 +58,7 @@ public class Arrivals {
                             for (int k = 0; k < grandChildNodes.getLength(); k++) {
                                 Element grandChildElement = (Element) grandChildNodes.item(k);
 
-                                System.out.println(String.format("grandChildElement: %s",
-                                        grandChildElement.getTagName()));
+//                                System.out.println(String.format("grandChildElement: %s", grandChildElement.getTagName()));
 
                                 NodeList greatGrandChildrenNodes = grandChildElement.getChildNodes();
 
@@ -69,9 +67,9 @@ public class Arrivals {
                                 for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
                                     Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
 
-                                    System.out.println(String.format("greatGrandChildElement: %s:%s",
-                                            greatGrandChildElement.getTagName(),
-                                            greatGrandChildElement.getTextContent()));
+//                                    System.out.println(String.format("greatGrandChildElement: %s:%s",
+//                                            greatGrandChildElement.getTagName(),
+//                                            greatGrandChildElement.getTextContent()));
 
                                     if (grandChildElement.getTagName().equals("origin")) {
                                         newArrival.origin = grandChildElement.getTextContent();
