@@ -13,6 +13,7 @@ import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -26,14 +27,23 @@ import org.xml.sax.InputSource;
 public class Stations {
 
     public HashMap<String, Station> stationCollection = new HashMap<String, Station>();
+    Logger log = Logger.getLogger(Stations.class.getName());
 
     public Station getStation(String name) {
         return stationCollection.get(name);
     }
 
-    public HashMap<String, Station> getStations() { return stationCollection; }
+    public HashMap<String, Station> getStationCollection() { return stationCollection; }
 
-    // TODO add a getStations() that returns an array of stations
+    public ArrayList<Station> getStations() {
+        ArrayList<Station> results = new ArrayList<Station>();
+
+        for (String stationName : stationCollection.keySet()) {
+            results.add(stationCollection.get(stationName));
+        }
+
+        return results;
+    }
 
     public ArrayList<String> getStationNames() {
         ArrayList<String> results = new ArrayList<String>();
@@ -93,7 +103,7 @@ public class Stations {
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-                //System.out.println(String.format("element: %s", element.getTagName()));
+                log.trace(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("stations")) {
                     NodeList childNodes = element.getChildNodes();
@@ -101,7 +111,7 @@ public class Stations {
                     for (int j = 0; j < childNodes.getLength(); j++) {
                         Element childElement = (Element) childNodes.item(j);
 
-                        //System.out.println(String.format("childElement: %s", childElement.getTagName()));
+                        log.trace(String.format("childElement: %s", childElement.getTagName()));
 
                         NodeList grandChildNodes = childElement.getChildNodes();
                         Station newStation = new Station();
@@ -109,10 +119,11 @@ public class Stations {
                         // TODO we can probably grab them by name here, right?
                         for (int k = 0; k < grandChildNodes.getLength(); k++) {
                             Element grandChildElement = (Element) grandChildNodes.item(k);
-//                            System.out.println(String.format("grandChildElement: %s:%s",
-//                                    grandChildElement.getTagName(),
-//                                    grandChildElement.getTextContent()));
+                            log.trace(String.format("grandChildElement: %s:%s",
+                                    grandChildElement.getTagName(),
+                                    grandChildElement.getTextContent()));
 
+                            // TODO make this a switch
                             if (grandChildElement.getTagName().equals("name")) {
                                 newStation.name = grandChildElement.getTextContent();
                             } else if (grandChildElement.getTagName().equals("abbr")) {

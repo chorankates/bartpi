@@ -1,5 +1,7 @@
 package com.chorankates.bartpi;
 
+import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -11,12 +13,20 @@ public class Arrival {
     String origin;
     String destination;
     String fare; // should this just be a double?
+
+    // TODO parse these values into a real date object we can do maths on
     String origTimeMin;  // h:mm ?m
     String origTimeDate; // mm/dd/yyyy
     String destTimeMin;
     String destTimeDate;
 
     ArrayList<Leg> legs = new ArrayList<Leg>();
+    Logger log = Logger.getLogger(Arrival.class.getName());
+
+    public void addLeg(Leg newLeg) {
+        log.info(String.format("adding leg[%s] [%s->%s]", newLeg.getOrder(), newLeg.getOrigin(), newLeg.getDestination()));
+        legs.add(newLeg);
+    }
 
     public Arrival () {
         // allow this to be built up incrementally
@@ -63,14 +73,14 @@ public class Arrival {
         return destTimeDate;
     }
 
-	public void addLeg(Leg newLeg) {
-        System.out.println(String.format("adding leg[%s] [%s->%s]", newLeg.getOrder(), newLeg.getOrigin(), newLeg.getDestination()));
-		legs.add(newLeg);
-	}
-
 	public String getTripTime() {
 		// TODO implement something real here
 		return "NOT IMPLEMENTED";
 	}
+
+    public String getTimeUntilTrip() {
+        // TODO implement something real here
+        return "NOT IMPLEMENTED";
+    }
 
 }

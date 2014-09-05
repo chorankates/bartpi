@@ -16,14 +16,18 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-// TODO proper logging
+
+import org.apache.log4j.Logger;
 
 public class BartPI {
 
-	private final String USER_AGENT = "Mozilla/5.0";
-	public String BARTendpoint = "http://api.bart.gov/api";
-	private String BARTkey = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's public
-	public Stations stations = null;
+	public final String BARTendpoint = "http://api.bart.gov/api";
+    public Stations stations = null;
+
+    Logger log = Logger.getLogger(BartPI.class.getName());
+
+    private String BARTkey = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's public
+    private final String USER_AGENT = "Mozilla/5.0";
 
 	// TODO we should probably get station information during object instantiation
 	BartPI() {
@@ -33,7 +37,7 @@ public class BartPI {
 
 	BartPI(String key) {
 		this.BARTkey = key;
-		System.out.println(String.format("using key[%s]", this.BARTkey));
+		log.debug(String.format("using key[%s]", this.BARTkey));
         stations = this.getStations();
 	}
 
@@ -97,11 +101,8 @@ public class BartPI {
 		String url = String.format("%s/%s.aspx?%s&key=%s", this.BARTendpoint,
 				method, query, this.BARTkey);
 
-		System.out.println(String.format("callBART[%s]", url)); // or should we
-																// be printing
-																// query?
+		log.info(String.format("callBART[%s]", url));
 
-		// call something to convert stringy XML to an object of some sort
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -109,10 +110,9 @@ public class BartPI {
 		con.setRequestProperty("User-Agent", USER_AGENT); // add request header
 
 		int responseCode = con.getResponseCode();
-		System.out.println("Response Code : " + responseCode);
+		log.debug(String.format("response code[%s]", responseCode));
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(
-				con.getInputStream()));
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
 
@@ -122,7 +122,7 @@ public class BartPI {
 		in.close();
 
 		// print result
-		System.out.println("Response : " + response.toString());
+		log.debug(String.format("response (%s) [%s]", response.length(), response.toString()));
 
 		return response.toString();
 	}
@@ -131,6 +131,7 @@ public class BartPI {
 	public Stations getStations() {
         // TODO smarter caching..
         if (this.stations != null) {
+            log.debug("using cached station information");
             return this.stations;
         }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,6 +22,7 @@ import org.xml.sax.InputSource;
 public class Arrivals {
 
     List<Arrival> arrivalCollection = new ArrayList<Arrival>();
+    Logger log = Logger.getLogger(Arrivals.class.getName());
     
     public Arrival getArrival(int index) {
     	return arrivalCollection.get(index);
@@ -31,10 +33,12 @@ public class Arrivals {
     }
     
     public void addArrival(Arrival arrival) {
-    	System.out.println(String.format("adding arrival[%s] [%s->%s]",
+        // TODO we should use the improved arrival.toString() method when available
+    	log.debug(String.format("adding arrival[%s] [%s->%s]",
                 arrivalCollection.size(),
                 arrival.getOrigin(),
                 arrival.getDestination()));
+
 
     	arrivalCollection.add(arrival);
     }
@@ -50,7 +54,7 @@ public class Arrivals {
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-//                System.out.println(String.format("element: %s", element.getTagName()));
+                log.trace(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("schedule")) {
                     NodeList childNodes = element.getChildNodes();
@@ -58,7 +62,7 @@ public class Arrivals {
                     for (int j = 0; j < childNodes.getLength(); j++) {
                         Element childElement = (Element) childNodes.item(j);
 
-//                        System.out.println(String.format("childElement: %s", childElement.getTagName()));
+                        log.trace(String.format("childElement: %s", childElement.getTagName()));
 
                         if (childElement.getTagName().equals("request")) {
                             NodeList grandChildNodes = childElement.getChildNodes();
@@ -66,7 +70,7 @@ public class Arrivals {
                             for (int k = 0; k < grandChildNodes.getLength(); k++) {
                                 Element grandChildElement = (Element) grandChildNodes.item(k);
 
-//                                System.out.println(String.format("grandChildElement: %s", grandChildElement.getTagName()));
+                                log.trace(String.format("grandChildElement: %s", grandChildElement.getTagName()));
 
                                 NodeList greatGrandChildrenNodes = grandChildElement.getChildNodes();
 
@@ -85,7 +89,7 @@ public class Arrivals {
                                     for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
                                         Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
 
-//                                        System.out.println(String.format("greatGrandChildElement: %s", greatGrandChildElement.getTagName()));
+                                        log.trace(String.format("greatGrandChildElement: %s", greatGrandChildElement.getTagName()));
 
                                         if (greatGrandChildElement.getTagName().equals("leg")) {
                                             Leg newLeg = new Leg();

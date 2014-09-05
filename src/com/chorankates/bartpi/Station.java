@@ -1,5 +1,7 @@
 package com.chorankates.bartpi;
 
+import org.apache.log4j.Logger;
+
 import java.util.HashMap;
 
 /**
@@ -16,6 +18,8 @@ public class Station {
     String county;
     String state; // really
     String zipcode;
+
+    Logger log = Logger.getLogger(Station.class.getName());
 
     public Station () {
         // allow this to be built up incrementally

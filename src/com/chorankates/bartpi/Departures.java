@@ -8,6 +8,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -21,6 +22,7 @@ import org.xml.sax.InputSource;
 public class Departures {
 
     public List<Departure> departureCollection = new ArrayList<Departure>();
+    Logger log = Logger.getLogger(Departures.class.getName());
     
     public Departure getDeparture(int index) {
     	return departureCollection.get(index);
@@ -41,7 +43,7 @@ public class Departures {
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-//                System.out.println(String.format("element: %s", element.getTagName()));
+                log.trace(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("schedule")) {
                     NodeList childNodes = element.getChildNodes();
@@ -49,7 +51,7 @@ public class Departures {
                     for (int j = 0; j < childNodes.getLength(); j++) {
                         Element childElement = (Element) childNodes.item(j);
 
-//                        System.out.println(String.format("childElement: %s", childElement.getTagName()));
+                        log.trace(String.format("childElement: %s", childElement.getTagName()));
 
                         if (childElement.getTagName().equals("request")) {
                             NodeList grandChildNodes = childElement.getChildNodes();
@@ -57,7 +59,7 @@ public class Departures {
                             for (int k = 0; k < grandChildNodes.getLength(); k++) {
                                 Element grandChildElement = (Element) grandChildNodes.item(k);
 
-//                                System.out.println(String.format("grandChildElement: %s", grandChildElement.getTagName()));
+                                log.trace(String.format("grandChildElement: %s", grandChildElement.getTagName()));
 
                                 NodeList greatGrandChildrenNodes = grandChildElement.getChildNodes();
 
@@ -76,7 +78,7 @@ public class Departures {
                                     for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
                                         Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
 
-//                                        System.out.println(String.format("greatGrandChildElement: %s", greatGrandChildElement.getTagName()));
+                                        log.trace(String.format("greatGrandChildElement: %s", greatGrandChildElement.getTagName()));
 
                                         if (greatGrandChildElement.getTagName().equals("leg")) {
                                             Leg newLeg = new Leg();
@@ -111,11 +113,13 @@ public class Departures {
     }
 
 	private void addDeparture(Departure departure) {
-		System.out.println(String.format("adding departure[%s] [%s->%s]",
+		log.debug(String.format("adding departure[%s] [%s->%s]",
 				departureCollection.size(),
 				departure.getOrigin(),
 				departure.getDestination()));
-		
+
+        // TODO add the improved departure.toString() when available
+
 		departureCollection.add(departure);
 	}
 }
