@@ -41,21 +41,30 @@ public class Departure {
     public String toString() {
     	
     	String tripTime;
-    	
+    	String leaveTime;
+
 		try {
 			tripTime = this.getTripTime();
 		} catch (ParseException e) {
 			tripTime = "unknown";
 			log.error(e.getMessage());
 		}
+
+        try {
+            leaveTime = this.getTimeUntilTrip();
+        } catch (ParseException e) {
+            leaveTime = "unknown";
+            log.error(e.getMessage());
+        }
 		
-        return String.format("[%s->%s] [%s->%s] ($ %s) (%s)",
+        return String.format("[%s->%s] [%s->%s] ($%s, %s) (leaves station in %s)",
                 this.getOrigin(),
                 this.getDestination(),
                 this.getOrigTimeMin(),
                 this.getDestTimeMin(),
                 this.getFare(),
-                tripTime);
+                tripTime,
+                leaveTime);
     }
 
     public Departure (Departures departures, int index) {
@@ -121,9 +130,12 @@ public class Departure {
         return String.format("%s minutes", (tripStop.getTime() - tripStart.getTime()) / 1000 / 60);
 	}
 
-    public String getTimeUntilTrip() {
-        // TODO implement something real here
-        return "NOT IMPLEMENTED";
+    public String getTimeUntilTrip() throws ParseException {
+        Date timeNow = new Date();
+        Date tripStart = this.getOriginTime();
+
+        // TODO support more than just minutes..
+        return String.format("%s minutes", (tripStart.getTime() - timeNow.getTime()) / 1000 / 60);
     }
 
 }
