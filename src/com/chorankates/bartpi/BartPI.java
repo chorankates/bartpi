@@ -36,7 +36,7 @@ public class BartPI {
 	}
 
 	// TODO use station names?
-	public void arrivals(String originCode, String destinationCode) {
+	public Arrivals arrivals(String originCode, String destinationCode) {
 		// TODO should probably have a way for users to control these..
 		String time = "now";
 		int howManyTripsBefore = 0;
@@ -45,18 +45,18 @@ public class BartPI {
 		String url = String.format(
 				"cmd=arrive&orig=%s&dest=%s&time=%s&b=%s&a=%s", originCode,
 				destinationCode, time, howManyTripsBefore, howManyTripsAfter);
+		String xml = null;
 
 		try {
-			String xml = callBART("sched", url);
-
-
+			xml = callBART("sched", url);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return new Arrivals(xml);
 	}
 
-	public void departures(String originCode, String destinationCode) {
+	public Departures departures(String originCode, String destinationCode) {
 		String time = "now";
 		int howManyTripsBefore = 0;
 		int howManyTripsAfter = 3;
@@ -64,13 +64,16 @@ public class BartPI {
 		String url = String.format(
 				"cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s", originCode,
 				destinationCode, time, howManyTripsBefore, howManyTripsAfter);
-
+		String xml = null;
+		
 		try {
-			String xml = callBART("sched", url);
+			xml = callBART("sched", url);			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		return new Departures(xml);
 	}
 
 	public String callBART(String method, String query)
