@@ -16,9 +16,14 @@ public class Departure {
     String destTimeMin;
     String destTimeDate;
 
-    // TODO should legs be their own objects? probably..
-    ArrayList<HashMap<String, String>> legs = new ArrayList<HashMap<String, String>>();
+    ArrayList<Leg> legs = new ArrayList<Leg>();
+    
+	public void addLeg(Leg newLeg) {
+        System.out.println(String.format("adding leg[%s] [%s->%s]", newLeg.getOrder(), newLeg.getOrigin(), newLeg.getDestination()));
+		legs.add(newLeg);
+	}
 
+    
     public Departure () {
         // allow this to be built up incrementally
     }
@@ -63,5 +68,10 @@ public class Departure {
     public String getDestTimeDate() {
         return destTimeDate;
     }
+
+	public String getTripTime() {
+		// TODO implement this
+		return "NOT IMPLEMENTED";
+	}
 
 }

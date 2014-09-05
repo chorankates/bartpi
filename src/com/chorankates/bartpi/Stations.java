@@ -33,6 +33,8 @@ public class Stations {
 
     public HashMap<String, Station> getStations() { return stationCollection; }
 
+    // TODO add a getStations() that returns an array of stations
+
     public ArrayList<String> getStationNames() {
         ArrayList<String> results = new ArrayList<String>();
 

@@ -68,4 +68,9 @@ public class Arrival {
 		legs.add(newLeg);
 	}
 
+	public String getTripTime() {
+		// TODO implement something real here
+		return "NOT IMPLEMENTED";
+	}
+
 }

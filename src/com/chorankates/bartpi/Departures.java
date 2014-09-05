@@ -26,23 +26,22 @@ public class Departures {
     	return departureCollection.get(index);
     }
     
+	public List<Departure> getDepartures() {
+		return departureCollection;
+	}
+
     public Departures (String xml) {
 
         try {
-            DocumentBuilder db = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(xml));
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            //Document doc = db.parse(is);
             Document doc = db.parse(new InputSource(new StringReader(xml)));
 
             NodeList nodes = doc.getDocumentElement().getChildNodes();
 
             for (int i = 0; i < nodes.getLength(); i++) {
                 Element element = (Element) nodes.item(i);
-                System.out.println(String.format("element: %s",
-                        element.getTagName()));
+//                System.out.println(String.format("element: %s", element.getTagName()));
 
                 if (element.getTagName().equals("schedule")) {
                     NodeList childNodes = element.getChildNodes();
@@ -50,15 +49,74 @@ public class Departures {
                     for (int j = 0; j < childNodes.getLength(); j++) {
                         Element childElement = (Element) childNodes.item(j);
 
-                        System.out.println(String.format("childElement: %s",
-                                childElement.getTagName()));
+//                        System.out.println(String.format("childElement: %s", childElement.getTagName()));
+
+                        if (childElement.getTagName().equals("request")) {
+                            NodeList grandChildNodes = childElement.getChildNodes();
+
+                            for (int k = 0; k < grandChildNodes.getLength(); k++) {
+                                Element grandChildElement = (Element) grandChildNodes.item(k);
+
+//                                System.out.println(String.format("grandChildElement: %s", grandChildElement.getTagName()));
+
+                                NodeList greatGrandChildrenNodes = grandChildElement.getChildNodes();
+
+                                if (grandChildElement.getTagName().equals("trip")) {
+
+                                    Departure newDeparture = new Departure();
+
+                                    newDeparture.origin       = grandChildElement.getAttributeNode("origin").getNodeValue();
+                                    newDeparture.destination  = grandChildElement.getAttributeNode("destination").getNodeValue();
+                                    newDeparture.fare         = grandChildElement.getAttributeNode("fare").getNodeValue();
+                                    newDeparture.origTimeMin  = grandChildElement.getAttributeNode("origTimeMin").getNodeValue();
+                                    newDeparture.origTimeDate = grandChildElement.getAttributeNode("origTimeDate").getNodeValue();
+                                    newDeparture.destTimeMin  = grandChildElement.getAttributeNode("destTimeMin").getNodeValue();
+                                    newDeparture.destTimeDate = grandChildElement.getAttributeNode("destTimeDate").getNodeValue();
+
+                                    for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
+                                        Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
+
+//                                        System.out.println(String.format("greatGrandChildElement: %s", greatGrandChildElement.getTagName()));
+
+                                        if (greatGrandChildElement.getTagName().equals("leg")) {
+                                            Leg newLeg = new Leg();
+
+                                            newLeg.order = greatGrandChildElement.getAttributeNode("order").getNodeValue();
+                                            newLeg.transferCode = greatGrandChildElement.getAttributeNode("transfercode").getNodeValue();
+                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin").getNodeValue(); // TODO this is a code, should we auto convert? no - do that on render
+                                            newLeg.destination = greatGrandChildElement.getAttributeNode("destination").getNodeValue();
+                                            newLeg.origTimeMin = greatGrandChildElement.getAttributeNode("origTimeMin").getNodeValue();
+                                            newLeg.origTimeDate = greatGrandChildElement.getAttributeNode("origTimeDate").getNodeValue();
+                                            newLeg.destTimeMin = greatGrandChildElement.getAttributeNode("destTimeMin").getNodeValue();
+                                            newLeg.destTimeDate = greatGrandChildElement.getAttributeNode("destTimeDate").getNodeValue();
+                                            newLeg.line = greatGrandChildElement.getAttributeNode("line").getNodeValue();
+                                            newLeg.bikeFlag = greatGrandChildElement.getAttributeNode("bikeflag").getNodeValue();
+                                            newLeg.trainHeadStation = greatGrandChildElement.getAttributeNode("trainHeadStation").getNodeValue();
+                                            newLeg.trainIdx = greatGrandChildElement.getAttributeNode("trainIdx").getNodeValue();
+
+                                            newDeparture.addLeg(newLeg);
+                                        }
+                                    }
+
+                                    this.addDeparture(newDeparture);
+                                }
+                            }
+                        }
                     }
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+	private void addDeparture(Departure departure) {
+		System.out.println(String.format("adding departure[%s] [%s->%s]",
+				departureCollection.size(),
+				departure.getOrigin(),
+				departure.getDestination()));
+		
+		departureCollection.add(departure);
+	}
 }
 
