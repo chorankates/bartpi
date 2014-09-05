@@ -31,12 +31,11 @@ public class Arrivals {
     }
     
     public void addArrival(Arrival arrival) {
-        // TODO we should use the improved arrival.toString() method when available
-    	log.debug(String.format("adding arrival[%s] [%s->%s]",
+        log.debug(arrival.toString());
+    	log.info(String.format("adding arrival[%s] [%s->%s]",
                 arrivalCollection.size(),
                 arrival.getOrigin(),
                 arrival.getDestination()));
-
 
     	arrivalCollection.add(arrival);
     }
@@ -94,7 +93,7 @@ public class Arrivals {
 
                                             newLeg.order = greatGrandChildElement.getAttributeNode("order").getNodeValue();
                                             newLeg.transferCode = greatGrandChildElement.getAttributeNode("transfercode").getNodeValue();
-                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin").getNodeValue(); // TODO this is a code, should we auto convert? no - do that on render
+                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin").getNodeValue();
                                             newLeg.destination = greatGrandChildElement.getAttributeNode("destination").getNodeValue();
                                             newLeg.origTimeMin = greatGrandChildElement.getAttributeNode("origTimeMin").getNodeValue();
                                             newLeg.origTimeDate = greatGrandChildElement.getAttributeNode("origTimeDate").getNodeValue();

@@ -6,7 +6,7 @@ import org.junit.*;
 
 public class tester {
 
-	@Test
+    @Test
 	public static void main(String[] args) throws IOException {
 		BartPI bpi = new BartPI();
 
@@ -29,27 +29,13 @@ public class tester {
 		Arrivals arrivals = bpi.getArrivals("Embarcadero", "Powell St."); // for trips arriving based on specified time (NOW)
 
         for (Arrival arrival : arrivals.getArrivals()) {
-            System.out.println(String.format("[%s->%s] [%s->%s] ($ %s) (%s)",
-                    arrival.getOrigin(),
-                    arrival.getDestination(),
-                    arrival.getOrigTimeMin(),
-                    arrival.getDestTimeMin(),
-                    arrival.getFare(),
-                    arrival.getTripTime()
-                    ));
+            System.out.println(arrival.toString());
         }
 
 		Departures departures = bpi.getDepartures("Embarcadero", "Powell St."); // for trips departing based on specified time (NOW)
 
         for (Departure departure : departures.getDepartures()) {
-            System.out.println(String.format("[%s->%s] [%s->%s] ($ %s) (%s)",
-                    departure.getOrigin(),
-                    departure.getDestination(),
-                    departure.getOrigTimeMin(),
-                    departure.getDestTimeMin(),
-                    departure.getFare(),
-                    departure.getTripTime()
-            ));
+            System.out.println(departure.toString());
         }
 
 	}

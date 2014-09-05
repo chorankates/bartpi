@@ -112,12 +112,11 @@ public class Departures {
     }
 
 	private void addDeparture(Departure departure) {
-		log.debug(String.format("adding departure[%s] [%s->%s]",
+        log.debug(departure.toString());
+		log.info(String.format("adding departure[%s] [%s->%s]",
 				departureCollection.size(),
 				departure.getOrigin(),
 				departure.getDestination()));
-
-        // TODO add the improved departure.toString() when available
 
 		departureCollection.add(departure);
 	}
