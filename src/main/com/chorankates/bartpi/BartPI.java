@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
 import org.apache.log4j.Logger;
 
 public class BartPI {
@@ -12,13 +14,16 @@ public class BartPI {
     public final String BARTendpoint = "http://api.bart.gov/api";
     public Stations stations = null;
 
-    Logger log = Logger.getLogger(BartPI.class.getName());
+    private Logger log = Logger.getLogger(BartPI.class.getName());
+    private String BARTkey                        = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's public
+    private final String USER_AGENT               = "Mozilla/5.0";
+    private int cacheValidity                     = 60 * 1000; // milli->sec
+    private HashMap<String, HashMap<String, String>> responseCache = new HashMap<String, HashMap<String, String>>();
 
-    private String BARTkey = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's public
-    private final String USER_AGENT = "Mozilla/5.0";
+    // TODO these probably belong on the 'profile' level, not here..
+    private int tripsBefore = 0;
+    private int tripsAfter = 3;
 
-    // TODO we should probably get station information during object
-    // instantiation
     BartPI() {
         System.out.println(String.format("using shared key[%s]", this.BARTkey));
         stations = this.getStations();
@@ -30,24 +35,55 @@ public class BartPI {
         stations = this.getStations();
     }
 
-    public Arrivals getArrivals(String origin, String destination) throws IOException {
+    public int getCacheValidity() {
+        return cacheValidity;
+    }
 
-        // if passed the name, convert to abbreviation -- if not a known name,
-        // assume abbreviated already
-        String originAbbreviation = stations.getStationNames().contains(origin) ? stations
-                .stationNameToAbbreviation(origin) : origin;
-        String destinationAbbreviation = stations.getStationNames().contains(destination) ? stations
-                .stationNameToAbbreviation(destination) : destination;
+    public void setCacheValidity(int length) {
+        cacheValidity = length;
+    }
 
-        // TODO should probably have a way for users to control these (or at
-        // least trips before/after).. probably a global setting, so should make
-        // it part of this object
-        String time = "now";
-        int howManyTripsBefore = 0;
-        int howManyTripsAfter = 3;
+    public String getKey() {
+        return BARTkey;
+    }
 
-        String url = String.format("cmd=arrive&orig=%s&dest=%s&time=%s&b=%s&a=%s", originAbbreviation,
-                destinationAbbreviation, time, howManyTripsBefore, howManyTripsAfter);
+    public void setKey(String key) {
+        BARTkey = key;
+    }
+
+    public int getTripsBefore() {
+        return tripsBefore;
+    }
+
+    public void setTripsBefore(int count) {
+        tripsBefore = count;
+    }
+
+    public int getTripsAfter() {
+        return tripsAfter;
+    }
+
+    public void setTripsAfter(int count) {
+        tripsAfter = count;
+    }
+
+    public String getEndpoint() {
+        return BARTendpoint;
+    }
+
+    public Arrivals getArrivals(Station origin, Station destination) throws IOException {
+        return getArrivals(origin, destination, "now");
+    }
+
+    public Arrivals getArrivals(Station origin, Station destination, String time) {
+
+        String url = String.format("cmd=arrive&orig=%s&dest=%s&time=%s&b=%s&a=%s",
+                origin.getAbbreviation(),
+                destination.getAbbreviation(),
+                time,
+                tripsBefore,
+                tripsAfter);
+
         String xml = null;
 
         try {
@@ -59,22 +95,33 @@ public class BartPI {
         return new Arrivals(xml);
     }
 
-    public Departures getDepartures(String origin, String destination) throws IOException {
+    public Arrivals getArrivals(String origin, String destination) throws IOException {
 
-        // if passed the name, convert to abbreviation -- if not a known name,
-        // assume abbreviated already
-        String originAbbreviation = stations.getStationNames().contains(origin) ? stations
-                .stationNameToAbbreviation(origin) : origin;
-        String destinationAbbreviation = stations.getStationNames().contains(destination) ? stations
-                .stationNameToAbbreviation(destination) : destination;
+        String originName = stations.getStationNames().contains(origin)
+                ? origin
+                : stations.stationAbbreviationToName(origin);
+        String destinationName = stations.getStationNames().contains(destination)
+                ? destination
+                : stations.stationAbbreviationToName(destination);
 
-        // TODO same as above..
-        String time = "now";
-        int howManyTripsBefore = 0;
-        int howManyTripsAfter = 3;
+        Station originStation      = stations.getStation(originName);
+        Station destinationStation = stations.getStation(destinationName);
 
-        String url = String.format("cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s", originAbbreviation,
-                destinationAbbreviation, time, howManyTripsBefore, howManyTripsAfter);
+        return getArrivals(originStation, destinationStation);
+    }
+
+    public Departures getDepartures(Station origin, Station destination) {
+        return getDepartures(origin, destination, "now");
+    }
+
+    public Departures getDepartures(Station origin, Station destination, String time) {
+        String url = String.format("cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s",
+                origin.getAbbreviation(),
+                destination.getAbbreviation(),
+                time,
+                tripsBefore,
+                tripsAfter);
+
         String xml = null;
 
         try {
@@ -85,15 +132,25 @@ public class BartPI {
         }
 
         return new Departures(xml);
+
+    }
+
+    public Departures getDepartures(String origin, String destination) throws IOException {
+
+        String originName = stations.getStationNames().contains(origin)
+                ? origin
+                : stations.stationAbbreviationToName(origin);
+        String destinationName = stations.getStationNames().contains(destination)
+                ? destination
+                : stations.stationAbbreviationToName(destination);
+
+        Station originStation      = stations.getStation(originName);
+        Station destinationStation = stations.getStation(destinationName);
+
+        return getDepartures(originStation, destinationStation);
     }
 
     public Stations getStations() {
-        // TODO smarter caching..
-        if (this.stations != null) {
-            log.debug("using cached station information");
-            return this.stations;
-        }
-
         String response = null;
 
         try {
@@ -112,6 +169,29 @@ public class BartPI {
         // be prepended to your query
 
         String url = String.format("%s/%s.aspx?%s&key=%s", this.BARTendpoint, method, query, this.BARTkey);
+
+        if (responseCache.containsKey(url)) {
+            HashMap<String, String> cachedResponse = responseCache.get(url);
+
+            Long created = Long.parseLong(cachedResponse.get("time"));
+            Long now     = new Date().getTime();
+            Long age     = now - created;
+
+            if (age < cacheValidity) {
+                log.debug(String.format("using cached response[age: %s, cacheValidity: %s, created: %s, now: %s]",
+                        age,
+                        cacheValidity,
+                        created,
+                        now));
+                return cachedResponse.get("response");
+            } else {
+                log.debug(String.format("expiring cached response[age: %s, cacheValidity: %s, created: %s, now: %s]",
+                        age,
+                        cacheValidity,
+                        created,
+                        now));
+            }
+        }
 
         log.info(String.format("callBART[%s]", url));
 
@@ -135,6 +215,19 @@ public class BartPI {
 
         // print result
         log.debug(String.format("response (%s) [%s]", response.length(), response.toString()));
+
+        if (responseCode == 200) {
+            // cache this response
+            HashMap<String, String> value = new HashMap<String, String>();
+
+            String time = String.format("%s", new Date().getTime()); // TODO this is stupid
+            log.debug(String.format("caching response[time: %s]", time));
+
+            value.put("time", time);
+            value.put("response", response.toString());
+
+            responseCache.put(url, value);
+        }
 
         return response.toString();
     }
