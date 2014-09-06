@@ -2,11 +2,8 @@ package com.chorankates.bartpi;
 
 import java.io.IOException;
 
-import org.junit.*;
-
 public class tester {
 
-    @Test
 	public static void main(String[] args) throws IOException {
 		BartPI bpi = new BartPI();
 
@@ -20,10 +17,6 @@ public class tester {
                                             station.getAbbreviation(),
                                             station.getCity()
                                             ));
-
-            // TODO this should be an actual test
-            Assert.assertEquals(stations.stationAbbreviationToName(station.getAbbreviation()), name);
-            Assert.assertEquals(stations.stationNameToAbbreviation(name), station.getAbbreviation());
         }
 
 		Arrivals arrivals = bpi.getArrivals("Powell St.", "Rockridge"); // for trips arriving based on specified time (NOW)
