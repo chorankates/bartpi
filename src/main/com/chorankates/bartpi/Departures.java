@@ -13,7 +13,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-
 /**
  * Created by conor on 9/4/14.
  */
@@ -22,16 +21,16 @@ public class Departures {
 
     public List<Departure> departureCollection = new ArrayList<Departure>();
     Logger log = Logger.getLogger(Departures.class.getName());
-    
-    public Departure getDeparture(int index) {
-    	return departureCollection.get(index);
-    }
-    
-	public List<Departure> getDepartures() {
-		return departureCollection;
-	}
 
-    public Departures (String xml) {
+    public Departure getDeparture(int index) {
+        return departureCollection.get(index);
+    }
+
+    public List<Departure> getDepartures() {
+        return departureCollection;
+    }
+
+    public Departures(String xml) {
 
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -66,34 +65,60 @@ public class Departures {
 
                                     Departure newDeparture = new Departure();
 
-                                    newDeparture.origin       = grandChildElement.getAttributeNode("origin").getNodeValue();
-                                    newDeparture.destination  = grandChildElement.getAttributeNode("destination").getNodeValue();
-                                    newDeparture.fare         = grandChildElement.getAttributeNode("fare").getNodeValue();
-                                    newDeparture.origTimeMin  = grandChildElement.getAttributeNode("origTimeMin").getNodeValue();
-                                    newDeparture.origTimeDate = grandChildElement.getAttributeNode("origTimeDate").getNodeValue();
-                                    newDeparture.destTimeMin  = grandChildElement.getAttributeNode("destTimeMin").getNodeValue();
-                                    newDeparture.destTimeDate = grandChildElement.getAttributeNode("destTimeDate").getNodeValue();
+                                    newDeparture.origin = grandChildElement.getAttributeNode("origin").getNodeValue();
+                                    newDeparture.destination = grandChildElement.getAttributeNode("destination")
+                                            .getNodeValue();
+                                    newDeparture.fare = grandChildElement.getAttributeNode("fare").getNodeValue();
+                                    newDeparture.origTimeMin = grandChildElement.getAttributeNode("origTimeMin")
+                                            .getNodeValue();
+                                    newDeparture.origTimeDate = grandChildElement.getAttributeNode("origTimeDate")
+                                            .getNodeValue();
+                                    newDeparture.destTimeMin = grandChildElement.getAttributeNode("destTimeMin")
+                                            .getNodeValue();
+                                    newDeparture.destTimeDate = grandChildElement.getAttributeNode("destTimeDate")
+                                            .getNodeValue();
 
                                     for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
                                         Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
 
-                                        log.trace(String.format("greatGrandChildElement: %s", greatGrandChildElement.getTagName()));
+                                        log.trace(String.format("greatGrandChildElement: %s",
+                                                greatGrandChildElement.getTagName()));
 
                                         if (greatGrandChildElement.getTagName().equals("leg")) {
                                             Leg newLeg = new Leg();
 
-                                            newLeg.order = greatGrandChildElement.getAttributeNode("order").getNodeValue();
-                                            newLeg.transferCode = greatGrandChildElement.getAttributeNode("transfercode").getNodeValue();
-                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin").getNodeValue(); // TODO this is a code, should we auto convert? no - do that on render
-                                            newLeg.destination = greatGrandChildElement.getAttributeNode("destination").getNodeValue();
-                                            newLeg.origTimeMin = greatGrandChildElement.getAttributeNode("origTimeMin").getNodeValue();
-                                            newLeg.origTimeDate = greatGrandChildElement.getAttributeNode("origTimeDate").getNodeValue();
-                                            newLeg.destTimeMin = greatGrandChildElement.getAttributeNode("destTimeMin").getNodeValue();
-                                            newLeg.destTimeDate = greatGrandChildElement.getAttributeNode("destTimeDate").getNodeValue();
-                                            newLeg.line = greatGrandChildElement.getAttributeNode("line").getNodeValue();
-                                            newLeg.bikeFlag = greatGrandChildElement.getAttributeNode("bikeflag").getNodeValue();
-                                            newLeg.trainHeadStation = greatGrandChildElement.getAttributeNode("trainHeadStation").getNodeValue();
-                                            newLeg.trainIdx = greatGrandChildElement.getAttributeNode("trainIdx").getNodeValue();
+                                            newLeg.order = greatGrandChildElement.getAttributeNode("order")
+                                                    .getNodeValue();
+                                            newLeg.transferCode = greatGrandChildElement.getAttributeNode(
+                                                    "transfercode").getNodeValue();
+                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin")
+                                                    .getNodeValue(); // TODO
+                                                                     // this is
+                                                                     // a code,
+                                                                     // should
+                                                                     // we auto
+                                                                     // convert?
+                                                                     // no - do
+                                                                     // that on
+                                                                     // render
+                                            newLeg.destination = greatGrandChildElement.getAttributeNode("destination")
+                                                    .getNodeValue();
+                                            newLeg.origTimeMin = greatGrandChildElement.getAttributeNode("origTimeMin")
+                                                    .getNodeValue();
+                                            newLeg.origTimeDate = greatGrandChildElement.getAttributeNode(
+                                                    "origTimeDate").getNodeValue();
+                                            newLeg.destTimeMin = greatGrandChildElement.getAttributeNode("destTimeMin")
+                                                    .getNodeValue();
+                                            newLeg.destTimeDate = greatGrandChildElement.getAttributeNode(
+                                                    "destTimeDate").getNodeValue();
+                                            newLeg.line = greatGrandChildElement.getAttributeNode("line")
+                                                    .getNodeValue();
+                                            newLeg.bikeFlag = greatGrandChildElement.getAttributeNode("bikeflag")
+                                                    .getNodeValue();
+                                            newLeg.trainHeadStation = greatGrandChildElement.getAttributeNode(
+                                                    "trainHeadStation").getNodeValue();
+                                            newLeg.trainIdx = greatGrandChildElement.getAttributeNode("trainIdx")
+                                                    .getNodeValue();
 
                                             newDeparture.addLeg(newLeg);
                                         }
@@ -111,14 +136,11 @@ public class Departures {
         }
     }
 
-	private void addDeparture(Departure departure) {
+    private void addDeparture(Departure departure) {
         log.debug(departure.toString());
-		log.info(String.format("adding departure[%s] [%s->%s]",
-				departureCollection.size(),
-				departure.getOrigin(),
-				departure.getDestination()));
+        log.info(String.format("adding departure[%s] [%s->%s]", departureCollection.size(), departure.getOrigin(),
+                departure.getDestination()));
 
-		departureCollection.add(departure);
-	}
+        departureCollection.add(departure);
+    }
 }
-

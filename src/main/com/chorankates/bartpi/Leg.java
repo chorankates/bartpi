@@ -6,16 +6,15 @@ import org.apache.log4j.Logger;
  * Created by conor on 9/5/14.
  */
 
-
 public class Leg {
 
-	String order; // this should be an int
-	String transferCode;
+    String order; // this should be an int
+    String transferCode;
     String origin;
     String destination;
 
     // TODO convert this to a date object we can do maths on
-    String origTimeMin;  // h:mm ?m
+    String origTimeMin; // h:mm ?m
     String origTimeDate; // mm/dd/yyyy
     String destTimeMin;
     String destTimeDate;
@@ -26,7 +25,7 @@ public class Leg {
 
     Logger log = Logger.getLogger(Leg.class.getName());
 
-    public Leg () {
+    public Leg() {
         // allow this to be built up incrementally
     }
 

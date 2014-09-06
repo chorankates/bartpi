@@ -28,7 +28,9 @@ public class Stations {
         return stationCollection.get(name);
     }
 
-    public HashMap<String, Station> getStationCollection() { return stationCollection; }
+    public HashMap<String, Station> getStationCollection() {
+        return stationCollection;
+    }
 
     public ArrayList<Station> getStations() {
         ArrayList<Station> results = new ArrayList<Station>();
@@ -83,11 +85,10 @@ public class Stations {
         throw new IOException(String.format("unable to find station abbreviation from name [%s]", stationName));
     }
 
-    public Stations (String xml) {
+    public Stations(String xml) {
 
         try {
-            DocumentBuilder db = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder();
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
             Document doc = db.parse(new InputSource(new StringReader(xml)));
 
@@ -110,8 +111,7 @@ public class Stations {
 
                         for (int k = 0; k < grandChildNodes.getLength(); k++) {
                             Element grandChildElement = (Element) grandChildNodes.item(k);
-                            log.trace(String.format("grandChildElement: %s:%s",
-                                    grandChildElement.getTagName(),
+                            log.trace(String.format("grandChildElement: %s:%s", grandChildElement.getTagName(),
                                     grandChildElement.getTextContent()));
 
                             // TODO make this a switch

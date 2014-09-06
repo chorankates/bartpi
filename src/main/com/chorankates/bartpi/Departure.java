@@ -16,39 +16,36 @@ public class Departure {
     String origin;
     String destination;
     String fare; // should this just be a double?
-    String origTimeMin;  // h:mm ?m
+    String origTimeMin; // h:mm ?m
     String origTimeDate; // mm/dd/yyyy
     String destTimeMin;
     String destTimeDate;
     Logger log = Logger.getLogger(Departure.class.getName());
 
     ArrayList<Leg> legs = new ArrayList<Leg>();
-    
-	public void addLeg(Leg newLeg) {
-        log.info(String.format("adding leg[%s] [%s->%s]",
-                newLeg.getOrder(),
-                newLeg.getOrigin(),
+
+    public void addLeg(Leg newLeg) {
+        log.info(String.format("adding leg[%s] [%s->%s]", newLeg.getOrder(), newLeg.getOrigin(),
                 newLeg.getDestination()));
 
-		legs.add(newLeg);
-	}
+        legs.add(newLeg);
+    }
 
-    
-    public Departure () {
+    public Departure() {
         // allow this to be built up incrementally
     }
 
     public String toString() {
-    	
-    	String tripTime;
-    	String leaveTime;
 
-		try {
-			tripTime = this.getTripTime();
-		} catch (ParseException e) {
-			tripTime = "unknown";
-			log.error(e.getMessage());
-		}
+        String tripTime;
+        String leaveTime;
+
+        try {
+            tripTime = this.getTripTime();
+        } catch (ParseException e) {
+            tripTime = "unknown";
+            log.error(e.getMessage());
+        }
 
         try {
             leaveTime = this.getTimeUntilTrip();
@@ -56,27 +53,22 @@ public class Departure {
             leaveTime = "unknown";
             log.error(e.getMessage());
         }
-		
-        return String.format("[%s->%s] [%s->%s] ($%s, %s) (leaves station in %s)",
-                this.getOrigin(),
-                this.getDestination(),
-                this.getOrigTimeMin(),
-                this.getDestTimeMin(),
-                this.getFare(),
-                tripTime,
+
+        return String.format("[%s->%s] [%s->%s] ($%s, %s) (leaves station in %s)", this.getOrigin(),
+                this.getDestination(), this.getOrigTimeMin(), this.getDestTimeMin(), this.getFare(), tripTime,
                 leaveTime);
     }
 
-    public Departure (Departures departures, int index) {
+    public Departure(Departures departures, int index) {
 
-        Departure departure = departures.getDeparture(index );
+        Departure departure = departures.getDeparture(index);
 
-        origin       = departure.getOrigin();
-        destination  = departure.getDestination();
-        fare         = departure.getFare();
-        origTimeMin  = departure.getOrigTimeMin();
+        origin = departure.getOrigin();
+        destination = departure.getDestination();
+        fare = departure.getFare();
+        origTimeMin = departure.getOrigTimeMin();
         origTimeDate = departure.getOrigTimeDate();
-        destTimeMin  = departure.getDestTimeMin();
+        destTimeMin = departure.getDestTimeMin();
         destTimeDate = departure.getDestTimeDate();
     }
 
@@ -109,26 +101,26 @@ public class Departure {
     }
 
     public Date getOriginTime() throws ParseException {
-        String input         = String.format("%s %s", this.origTimeMin, this.origTimeDate);
+        String input = String.format("%s %s", this.origTimeMin, this.origTimeDate);
         DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");
-        Date date            = (Date) formatter.parse(input);
+        Date date = (Date) formatter.parse(input);
         return date;
     }
 
     public Date getDestinationTime() throws ParseException {
-        String input         = String.format("%s %s", this.destTimeMin, this.destTimeDate);
+        String input = String.format("%s %s", this.destTimeMin, this.destTimeDate);
         DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");
-        Date date            = (Date) formatter.parse(input);
+        Date date = (Date) formatter.parse(input);
         return date;
     }
 
-	public String getTripTime() throws ParseException {
+    public String getTripTime() throws ParseException {
         Date tripStart = this.getOriginTime();
-        Date tripStop  = this.getDestinationTime();
+        Date tripStop = this.getDestinationTime();
 
         // TODO support more than just minutes..
         return String.format("%s minutes", (tripStop.getTime() - tripStart.getTime()) / 1000 / 60);
-	}
+    }
 
     public String getTimeUntilTrip() throws ParseException {
         Date timeNow = new Date();

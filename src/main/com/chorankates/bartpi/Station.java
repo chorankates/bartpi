@@ -19,23 +19,23 @@ public class Station {
 
     Logger log = Logger.getLogger(Station.class.getName());
 
-    public Station () {
+    public Station() {
         // allow this to be built up incrementally
     }
 
-    public Station (Stations stations, String stationName) {
+    public Station(Stations stations, String stationName) {
 
         Station station = stations.getStation(stationName);
 
-        name         = station.getName();
+        name = station.getName();
         abbreviation = station.getAbbreviation();
-        latitude     = station.getLatitude();
-        longitude    = station.getLongitude();
-        address      = station.getAddress();
-        city         = station.getCity();
-        county       = station.getCounty();
-        state        = station.getState();
-        zipcode      = station.getZipcode();
+        latitude = station.getLatitude();
+        longitude = station.getLongitude();
+        address = station.getAddress();
+        city = station.getCity();
+        county = station.getCounty();
+        state = station.getState();
+        zipcode = station.getZipcode();
     }
 
     public String getName() {
