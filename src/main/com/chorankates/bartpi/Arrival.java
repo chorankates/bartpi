@@ -64,12 +64,12 @@ public class Arrival {
 
         Arrival arrival = arrivals.getArrival(index);
 
-        origin = arrival.getOrigin();
-        destination = arrival.getDestination();
-        fare = arrival.getFare();
-        origTimeMin = arrival.getOrigTimeMin();
+        origin       = arrival.getOrigin();
+        destination  = arrival.getDestination();
+        fare         = arrival.getFare();
+        origTimeMin  = arrival.getOrigTimeMin();
         origTimeDate = arrival.getOrigTimeDate();
-        destTimeMin = arrival.getDestTimeMin();
+        destTimeMin  = arrival.getDestTimeMin();
         destTimeDate = arrival.getDestTimeDate();
     }
 
@@ -101,6 +101,7 @@ public class Arrival {
         return destTimeDate;
     }
 
+    // TODO these should be up in BartPI.java, but need to refactor arrival/departure->trip
     public Date getOriginTime() throws ParseException {
         String input = String.format("%s %s", this.origTimeMin, this.origTimeDate);
         DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");

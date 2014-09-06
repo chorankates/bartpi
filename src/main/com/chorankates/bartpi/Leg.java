@@ -2,6 +2,11 @@ package com.chorankates.bartpi;
 
 import org.apache.log4j.Logger;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by conor on 9/5/14.
  */
@@ -13,7 +18,6 @@ public class Leg {
     String origin;
     String destination;
 
-    // TODO convert this to a date object we can do maths on
     String origTimeMin; // h:mm ?m
     String origTimeDate; // mm/dd/yyyy
     String destTimeMin;
@@ -75,6 +79,36 @@ public class Leg {
 
     public String getTrainIdx() {
         return trainIdx;
+    }
+
+    public Date getOriginTime() throws ParseException {
+        String input = String.format("%s %s", this.origTimeMin, this.origTimeDate);
+        DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");
+        Date date = (Date) formatter.parse(input);
+        return date;
+    }
+
+    public Date getDestinationTime() throws ParseException {
+        String input = String.format("%s %s", this.destTimeMin, this.destTimeDate);
+        DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");
+        Date date = (Date) formatter.parse(input);
+        return date;
+    }
+
+    public String getTripTime() throws ParseException {
+        Date tripStart = this.getOriginTime();
+        Date tripStop = this.getDestinationTime();
+
+        // TODO support more than just minutes..
+        return String.format("%s minutes", (tripStop.getTime() - tripStart.getTime()) / 1000 / 60);
+    }
+
+    public String getTimeUntilTrip() throws ParseException {
+        Date timeNow = new Date();
+        Date tripStart = this.getOriginTime();
+
+        // TODO support more than just minutes..
+        return String.format("%s minutes", (timeNow.getTime() - tripStart.getTime()) / 1000 / 60);
     }
 
 }

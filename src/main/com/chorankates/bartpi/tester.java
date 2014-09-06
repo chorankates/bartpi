@@ -17,27 +17,35 @@ public class tester {
             System.out.println(String.format("%s: %s (%s)", name, station.getAbbreviation(), station.getCity()));
         }
 
-        // iterate over routes instead of static specs      
-        ArrayList<Route> routes = new ArrayList<Route>();
-        routes.add(new Route("work"));
-        routes.add(new Route("mish"));
-        routes.add(new Route("eb"));
-        routes.add(new Route("fish"));
-        routes.add(new Route("Rockridge", "Powell St.", "test", "test"));
+        Profile workProfile = new Profile("leaving-work");
+        workProfile.addRoute(new Route("Embarcadero", "Powell St.", "conor"));
+        workProfile.addRoute(new Route("Embarcadero", "16th St. Mission", "pj"));
+        workProfile.addRoute(new Route("Embarcadero", "Daly City", "fish"));
 
-        for (Route route : routes) {
-            Arrivals arrivals     = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
-            Departures departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
+        Profile personalProfile = new Profile("personal");
+        personalProfile.addRoute(new Route("Powell St.", "Embarcadero", "home->office"));
+        personalProfile.addRoute(new Route("Powell St.", "Rockridge", "eb"));
+        personalProfile.addRoute(new Route("Powell St.", "16th St. Mission", "pj"));
 
-            for (Arrival arrival : arrivals.getArrivals()) {
-                System.out.println(arrival.toString());
-            }
+        ArrayList<Profile> profileList = new ArrayList<Profile>();
+        profileList.add(workProfile);
+        profileList.add(personalProfile);
 
-            for (Departure departure : departures.getDepartures()) {
-                System.out.println(departure.toString());
+        for (Profile profile : profileList) {
+
+            for (Route route : profile.getRoutes()) {
+                Arrivals arrivals = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
+                Departures departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
+
+                for (Arrival arrival : arrivals.getArrivals()) {
+                    System.out.println(arrival.toString());
+                }
+
+                for (Departure departure : departures.getDepartures()) {
+                    System.out.println(departure.toString());
+                }
             }
         }
-
     }
 
 }
