@@ -55,6 +55,5 @@ public class TestStations {
             Assert.assertTrue("correct exception thrown", false);
         }
     }
-	
-	
+    	
 }
