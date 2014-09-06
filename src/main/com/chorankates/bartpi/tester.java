@@ -1,6 +1,8 @@
 package com.chorankates.bartpi;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class tester {
 
@@ -15,30 +17,25 @@ public class tester {
             System.out.println(String.format("%s: %s (%s)", name, station.getAbbreviation(), station.getCity()));
         }
 
-        Arrivals arrivals = bpi.getArrivals("Powell St.", "Rockridge"); // for
-                                                                        // trips
-                                                                        // arriving
-                                                                        // based
-                                                                        // on
-                                                                        // specified
-                                                                        // time
-                                                                        // (NOW)
+        // iterate over routes instead of static specs      
+        ArrayList<Route> routes = new ArrayList<Route>();
+        routes.add(new Route("work"));
+        routes.add(new Route("mish"));
+        routes.add(new Route("eb"));
+        routes.add(new Route("fish"));
+        routes.add(new Route("Rockridge", "Powell St.", "test", "test"));
 
-        for (Arrival arrival : arrivals.getArrivals()) {
-            System.out.println(arrival.toString());
-        }
+        for (Route route : routes) {
+            Arrivals arrivals     = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
+            Departures departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
 
-        Departures departures = bpi.getDepartures("Powell St.", "Rockridge"); // for
-                                                                              // trips
-                                                                              // departing
-                                                                              // based
-                                                                              // on
-                                                                              // specified
-                                                                              // time
-                                                                              // (NOW)
+            for (Arrival arrival : arrivals.getArrivals()) {
+                System.out.println(arrival.toString());
+            }
 
-        for (Departure departure : departures.getDepartures()) {
-            System.out.println(departure.toString());
+            for (Departure departure : departures.getDepartures()) {
+                System.out.println(departure.toString());
+            }
         }
 
     }

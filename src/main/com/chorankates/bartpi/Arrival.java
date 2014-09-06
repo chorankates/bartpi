@@ -5,13 +5,13 @@ import org.apache.log4j.Logger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.SimpleDateFormat.*;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by conor on 9/4/14.
  */
+
 public class Arrival {
 
     String origin;

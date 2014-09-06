@@ -5,6 +5,7 @@ import org.junit.*;
 import java.io.IOException;
 import java.text.ParseException;
 
+@SuppressWarnings("unused")
 public class TestStations {
 
     private static BartPI bpi;
@@ -42,7 +43,7 @@ public class TestStations {
 
     @Test
     public void testAbbreviationToName() throws Exception {
-        Assert.assertEquals(stations.stationNameToAbbreviation(stationName), station.getAbbreviation());
+        Assert.assertEquals(stations.stationNameToAbbreviation(stationName), stationAbbreviation);
     }
 
     @Test
