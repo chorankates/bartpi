@@ -2,6 +2,9 @@ package com.chorankates.bartpi;
 
 import org.junit.*;
 
+import java.io.IOException;
+import java.text.ParseException;
+
 public class TestStations {
 
 	private static BartPI   bpi;
@@ -25,11 +28,33 @@ public class TestStations {
         // loop through the entire collection?
         // need some negative tests
 	}
-	
+
+    @Test
+    public void testBadNameToAbbreviation() {
+        try {
+            stations.stationNameToAbbreviation("Breezy Acres");
+        } catch (IOException e) {
+            Assert.assertTrue("correct exception thrown", true);
+        } catch (Exception e) {
+            Assert.assertTrue("correct exception thrown", false);
+        }
+    }
+
 	@Test
 	public void testAbbreviationToName() throws Exception {
 		Assert.assertEquals(stations.stationNameToAbbreviation(stationName), station.getAbbreviation());
 	}
+
+    @Test
+    public void testBadAbbreviationToName() {
+        try {
+            stations.stationAbbreviationToName("FOO");
+        } catch (IOException e) {
+            Assert.assertTrue("correct exception thrown", true);
+        } catch (Exception e) {
+            Assert.assertTrue("correct exception thrown", false);
+        }
+    }
 	
 	
 }
