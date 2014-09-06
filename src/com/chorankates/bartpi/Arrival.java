@@ -132,7 +132,7 @@ public class Arrival {
         Date tripStart = this.getOriginTime();
 
         // TODO support more than just minutes..
-        return String.format("%s minutes", (tripStart.getTime() - timeNow.getTime()) / 1000 / 60);
+        return String.format("%s minutes", (timeNow.getTime() - tripStart.getTime()) / 1000 / 60);
     }
 
 }

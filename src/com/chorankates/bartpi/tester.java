@@ -26,13 +26,13 @@ public class tester {
             Assert.assertEquals(stations.stationNameToAbbreviation(name), station.getAbbreviation());
         }
 
-		Arrivals arrivals = bpi.getArrivals("Embarcadero", "Powell St."); // for trips arriving based on specified time (NOW)
+		Arrivals arrivals = bpi.getArrivals("Powell St.", "Rockridge"); // for trips arriving based on specified time (NOW)
 
         for (Arrival arrival : arrivals.getArrivals()) {
             System.out.println(arrival.toString());
         }
 
-		Departures departures = bpi.getDepartures("Embarcadero", "Powell St."); // for trips departing based on specified time (NOW)
+		Departures departures = bpi.getDepartures("Powell St.", "Rockridge"); // for trips departing based on specified time (NOW)
 
         for (Departure departure : departures.getDepartures()) {
             System.out.println(departure.toString());
