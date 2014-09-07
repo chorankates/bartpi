@@ -21,8 +21,10 @@ import org.xml.sax.InputSource;
  */
 public class Stations {
 
-    private HashMap<String, Station> stationCollection = new HashMap<String, Station>();
     private static Logger log = Logger.getLogger(Stations.class.getName());
+    private HashMap<String, Station> stationCollection = new HashMap<String, Station>();
+    private HashMap<String, String> stationNames         = new HashMap<String, String>();
+    private HashMap<String, String> stationAbbreviations = new HashMap<String, String>();
 
     public Station getStation(String name) {
         return stationCollection.get(name);
@@ -42,49 +44,47 @@ public class Stations {
         return results;
     }
 
-    public ArrayList<String> getStationNames() {
-        ArrayList<String> results = new ArrayList<String>();
-
-        for (String name : stationCollection.keySet()) {
-            Station station = stationCollection.get(name);
-            results.add(station.getName());
-        }
-
-        return results;
+    public ArrayList<String> getStationNames() {        
+        return new ArrayList<String>(stationNames.keySet());
     }
 
     public ArrayList<String> getStationAbbreviations() {
-        ArrayList<String> results = new ArrayList<String>();
-
-        for (String name : stationCollection.keySet()) {
-            Station station = stationCollection.get(name);
-            results.add(station.getAbbreviation());
-        }
-
-        return results;
+    	return new ArrayList<String>(stationAbbreviations.keySet());
     }
 
     public String stationAbbreviationToName(String stationAbbreviation) throws IOException {
-        for (String name : stationCollection.keySet()) {
-            Station station = stationCollection.get(name);
-            if (station.getAbbreviation().equals(stationAbbreviation)) {
-                return station.getName();
-            }
+        if (stationAbbreviations.containsKey(stationAbbreviation)) {
+        	return stationAbbreviations.get(stationAbbreviation);
         }
 
         throw new IOException(String.format("unable to find station name from abbreviation [%s]", stationAbbreviation));
     }
 
-    public String stationNameToAbbreviation(String stationName) throws IOException {
-        for (String name : stationCollection.keySet()) {
-            Station station = stationCollection.get(name);
-            if (station.getName().equals(stationName)) {
-                return station.getAbbreviation();
-            }
+
+	public String stationAbbreviation(String station) {
+        if (stationAbbreviations.containsKey(station)) {
+            return station;
+        } else {
+            return stationNames.get(station);
         }
+	}
+
+    public String stationNameToAbbreviation(String stationName) throws IOException {
+        if (stationNames.containsKey(stationName)) {
+        	return stationNames.get(stationName);        	
+        }
+    	
         throw new IOException(String.format("unable to find station abbreviation from name [%s]", stationName));
     }
 
+	public String stationName(String station) {
+        if (stationNames.containsKey(station)) {
+            return station;
+        } else {
+            return stationAbbreviations.get(station);
+        }
+    }
+    
     public Stations(String xml) {
 
         try {
@@ -114,30 +114,43 @@ public class Stations {
                             log.trace(String.format("grandChildElement: %s:%s", grandChildElement.getTagName(),
                                     grandChildElement.getTextContent()));
 
-                            // TODO make this a switch
+                            String value =  grandChildElement.getTextContent();
+
+                            // TODO make this a switch - compiler complaining we can't switch on a string - is that only 1.8?
                             if (grandChildElement.getTagName().equals("name")) {
-                                newStation.name = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [name:%s]", value));
+                                newStation.name = value;
                             } else if (grandChildElement.getTagName().equals("abbr")) {
-                                newStation.abbreviation = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [abbr:%s]", value));
+                                newStation.abbreviation = value;
                             } else if (grandChildElement.getTagName().equals("gtfs_latitude")) {
-                                newStation.latitude = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [gtfs_latitude:%s]", value));
+                                newStation.latitude = value;
                             } else if (grandChildElement.getTagName().equals("gtfs_longitude")) {
-                                newStation.longitude = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [gtfs_longitude:%s]", value));
+                                newStation.longitude = value;
                             } else if (grandChildElement.getTagName().equals("address")) {
-                                newStation.address = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [address:%s]", value));
+                                newStation.address = value;
                             } else if (grandChildElement.getTagName().equals("city")) {
-                                newStation.city = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [city:%s]", value));
+                                newStation.city = value;
                             } else if (grandChildElement.getTagName().equals("county")) {
-                                newStation.county = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [county:%s]", value));
+                                newStation.county = value;
                             } else if (grandChildElement.getTagName().equals("state")) {
-                                newStation.state = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [state:%s]", value));
+                                newStation.state = value;
                             } else if (grandChildElement.getTagName().equals("zipcode")) {
-                                newStation.zipcode = grandChildElement.getTextContent();
+                                log.trace(String.format("adding [zipcode:%s]", value));
+                                newStation.zipcode = value;
                             }
 
                         }
 
                         stationCollection.put(newStation.getName(), newStation);
+                        stationNames.put(newStation.getName(), newStation.getAbbreviation());
+                        stationAbbreviations.put(newStation.getAbbreviation(), newStation.getName());
                     }
                 }
             }

@@ -27,15 +27,20 @@ public class Station {
 
         Station station = stations.getStation(stationName);
 
-        name = station.getName();
+        name         = station.getName();
         abbreviation = station.getAbbreviation();
-        latitude = station.getLatitude();
-        longitude = station.getLongitude();
-        address = station.getAddress();
-        city = station.getCity();
-        county = station.getCounty();
-        state = station.getState();
-        zipcode = station.getZipcode();
+        latitude     = station.getLatitude();
+        longitude    = station.getLongitude();
+        address      = station.getAddress();
+        city         = station.getCity();
+        county       = station.getCounty();
+        state        = station.getState();
+        zipcode      = station.getZipcode();
+    }
+
+    public boolean validateStation() {
+        // TODO implement something that validates we have (or do not) all attributes supplied
+        return false;
     }
 
     public String getName() {

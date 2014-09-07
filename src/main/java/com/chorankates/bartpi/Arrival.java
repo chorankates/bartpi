@@ -31,6 +31,12 @@ public class Arrival extends Trip {
 
     }
 
+    // TODO this in Trip.java
+    public boolean validateArrival() {
+        // TODO implement something that validates we have (or do not) all attributes supplied
+        return false;
+    }
+
     public static ArrayList<Trip> parseArrivalsXML(String xml) {
 
     	ArrayList<Trip> arrivals = new ArrayList<Trip>();

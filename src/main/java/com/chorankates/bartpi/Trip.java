@@ -14,8 +14,8 @@ import java.util.Date;
 public class Trip {
 
     Route route;
-    String tripType; // whether looking for departures or arrivals <-- yeah, this is probably wrong, Arrival should subclass trip
 
+    // TODO this isn't exactly right - but will work for now
     ArrayList<Arrival> arrivals;
     ArrayList<Departure> departures;
 
@@ -96,10 +96,6 @@ public class Trip {
 
     public void setOrigin(String name) {
         route.setOriginName(name);
-    }
-
-    public String getTripType() {
-        return tripType;
     }
 
     public String toString() {
