@@ -110,11 +110,11 @@ public class BartPI {
         return getArrivals(originStation, destinationStation);
     }
 
-    public Departures getDepartures(Station origin, Station destination) {
+    public ArrayList<Departure> getDepartures(Station origin, Station destination) {
         return getDepartures(origin, destination, "now");
     }
 
-    public Departures getDepartures(Station origin, Station destination, String time) {
+    public ArrayList<Departure> getDepartures(Station origin, Station destination, String time) {
         String url = String.format("cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s",
                 origin.getAbbreviation(),
                 destination.getAbbreviation(),

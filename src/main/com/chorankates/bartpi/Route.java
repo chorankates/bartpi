@@ -2,10 +2,9 @@ package com.chorankates.bartpi;
 
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-
 public class Route {
 
+    // TODO implement a method that can validate originName/destinationName
     private String originName;
     private String destinationName;
     private String routeName;
@@ -16,6 +15,10 @@ public class Route {
         this.originName      = originName;
         this.destinationName = destinationName;
         this.routeName       = routeName;
+    }
+
+    // allow incremental buildup
+    Route () {
     }
 
     public String getOriginName() {
@@ -29,5 +32,11 @@ public class Route {
     public String getRouteName() {
         return routeName;
     }
+
+    public void setOriginName(String name) { originName = name; }
+
+    public void setDestinationName(String name) { destinationName = name; }
+
+    public void setRouteName(String name) { routeName = name; }
 
 }
