@@ -21,8 +21,8 @@ import org.xml.sax.InputSource;
  */
 public class Stations {
 
-    public HashMap<String, Station> stationCollection = new HashMap<String, Station>();
-    Logger log = Logger.getLogger(Stations.class.getName());
+    private HashMap<String, Station> stationCollection = new HashMap<String, Station>();
+    private static Logger log = Logger.getLogger(Stations.class.getName());
 
     public Station getStation(String name) {
         return stationCollection.get(name);

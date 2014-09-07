@@ -27,7 +27,8 @@ public class Leg {
     String trainHeadStation;
     String trainIdx; // this should be an int
 
-    Logger log = Logger.getLogger(Leg.class.getName());
+    @SuppressWarnings("unused")
+	private static Logger log = Logger.getLogger(Leg.class.getName());
 
     public Leg() {
         // allow this to be built up incrementally

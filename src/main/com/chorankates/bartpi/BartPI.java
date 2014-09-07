@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import org.apache.log4j.Logger;
 
 public class BartPI {
@@ -14,7 +16,7 @@ public class BartPI {
     public final String BARTendpoint = "http://api.bart.gov/api";
     public Stations stations = null;
 
-    private Logger log = Logger.getLogger(BartPI.class.getName());
+    private static Logger log = Logger.getLogger(BartPI.class.getName());
     private String BARTkey                        = "MW9S-E7SL-26DU-VV8V"; // don't worry, it's public
     private final String USER_AGENT               = "Mozilla/5.0";
     private int cacheValidity                     = 60 * 1000; // milli->sec
@@ -71,11 +73,11 @@ public class BartPI {
         return BARTendpoint;
     }
 
-    public Arrivals getArrivals(Station origin, Station destination) throws IOException {
+    public ArrayList<Trip> getArrivals(Station origin, Station destination) throws IOException {
         return getArrivals(origin, destination, "now");
     }
 
-    public Arrivals getArrivals(Station origin, Station destination, String time) {
+    public ArrayList<Trip> getArrivals(Station origin, Station destination, String time) {
 
         String url = String.format("cmd=arrive&orig=%s&dest=%s&time=%s&b=%s&a=%s",
                 origin.getAbbreviation(),
@@ -92,10 +94,10 @@ public class BartPI {
             e.printStackTrace();
         }
 
-        return new Arrivals(xml);
+        return Arrival.parseArrivalsXML(xml);
     }
 
-    public Arrivals getArrivals(String origin, String destination) throws IOException {
+    public ArrayList<Trip> getArrivals(String origin, String destination) throws IOException {
 
         String originName = stations.getStationNames().contains(origin)
                 ? origin
@@ -110,11 +112,11 @@ public class BartPI {
         return getArrivals(originStation, destinationStation);
     }
 
-    public ArrayList<Departure> getDepartures(Station origin, Station destination) {
+    public ArrayList<Trip> getDepartures(Station origin, Station destination) {
         return getDepartures(origin, destination, "now");
     }
 
-    public ArrayList<Departure> getDepartures(Station origin, Station destination, String time) {
+    public ArrayList<Trip> getDepartures(Station origin, Station destination, String time) {
         String url = String.format("cmd=depart&orig=%s&dest=%s&time=%s&b=%s&a=%s",
                 origin.getAbbreviation(),
                 destination.getAbbreviation(),
@@ -131,11 +133,10 @@ public class BartPI {
             e.printStackTrace();
         }
 
-        return new Departures(xml);
-
+		return Departure.parseDeparturesXML(xml);
     }
 
-    public Departures getDepartures(String origin, String destination) throws IOException {
+    public ArrayList<Trip> getDepartures(String origin, String destination) throws IOException {
 
         String originName = stations.getStationNames().contains(origin)
                 ? origin

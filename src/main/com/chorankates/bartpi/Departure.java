@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class Departure extends Trip {
 
-    Logger log = Logger.getLogger(Departure.class.getName());
+    private static Logger log = Logger.getLogger(Departure.class.getName());
 
     Departure (Route route) {
         this.route = route;
@@ -26,9 +26,9 @@ public class Departure extends Trip {
 
     }
 
-    public ArrayList<Departure> callBARTToGetDepartures(String xml) {
+    public static ArrayList<Trip> parseDeparturesXML(String xml) {
 
-    	ArrayList<Departure> departures = new ArrayList<Departure>();
+    	ArrayList<Trip> departures = new ArrayList<Trip>();
     	
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();

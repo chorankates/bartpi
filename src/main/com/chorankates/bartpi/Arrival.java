@@ -21,7 +21,7 @@ import java.util.Date;
 
 public class Arrival extends Trip {
 
-    Logger log = Logger.getLogger(Arrival.class.getName());
+    private static Logger log = Logger.getLogger(Arrival.class.getName());
 
     Arrival (Route route) {
         this.route = route;
@@ -31,9 +31,9 @@ public class Arrival extends Trip {
 
     }
 
-    public ArrayList<Arrival> callBARTToGetArrivals(String xml) {
+    public static ArrayList<Trip> parseArrivalsXML(String xml) {
 
-    	ArrayList<Arrival> arrivals = new ArrayList<Arrival>();
+    	ArrayList<Trip> arrivals = new ArrayList<Trip>();
     	
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -132,5 +132,7 @@ public class Arrival extends Trip {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        return arrivals;
     }
 }

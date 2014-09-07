@@ -34,14 +34,14 @@ public class tester {
         for (Profile profile : profileList) {
 
             for (Route route : profile.getRoutes()) {
-                Arrivals arrivals = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
-                Departures departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
+                ArrayList<Trip> arrivals = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
+                ArrayList<Trip> departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
 
-                for (Trip arrival : arrivals.getArrivals()) {
+                for (Trip arrival : arrivals) {
                     System.out.println(arrival.toString());
                 }
 
-                for (Trip departure : departures.getDepartures()) {
+                for (Trip departure : departures) {
                     System.out.println(departure.toString());
                 }
             }

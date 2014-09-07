@@ -29,7 +29,7 @@ public class Trip {
     String destTimeDate;
 
     ArrayList<Leg> legs = new ArrayList<Leg>();
-    Logger log = Logger.getLogger(Arrival.class.getName());
+    private static Logger log = Logger.getLogger(Arrival.class.getName());
 
     // TODO how do we not allow this? just throw an exception if you try to instantiate this directly?
     Trip () {

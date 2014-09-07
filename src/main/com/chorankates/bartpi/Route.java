@@ -9,7 +9,7 @@ public class Route {
     private String destinationName;
     private String routeName;
 
-    Logger log = Logger.getLogger(Route.class.getName());
+    private static Logger log = Logger.getLogger(Route.class.getName());
 
     Route (String originName, String destinationName, String routeName) {
         this.originName      = originName;
