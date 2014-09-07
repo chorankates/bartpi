@@ -1,3 +1,6 @@
+.project
+.classpath
+.idea/
 bin/
 out/
 target/
