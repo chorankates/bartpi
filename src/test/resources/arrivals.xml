@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<uri><![CDATA[http://api.bart.gov/api/sched.aspx?cmd=arrive&orig=POWL&dest=16TH&time=now&b=0&a=3]]></uri>
+	<origin>POWL</origin>
+	<destination>16TH</destination>
+	<sched_num>34</sched_num>
+	<schedule>
+		<date>Sep 6, 2014</date>
+		<time>8:52 PM</time>
+		<before>0</before>
+		<after>3</after>
+		<request>
+			<trip origin="POWL" destination="16TH" fare="1.85" origTimeMin="8:49 PM"
+				origTimeDate="09/06/2014 " destTimeMin="8:52 PM" destTimeDate="09/06/2014"
+				clipper="0.65">
+				<leg order="1" transfercode="" origin="POWL" destination="16TH"
+					origTimeMin="8:49 PM" origTimeDate="09/06/2014" destTimeMin="8:52 PM"
+					destTimeDate="09/06/2014" line="ROUTE 11" bikeflag="1"
+					trainHeadStation="DALY" trainIdx="44" />
+			</trip>
+			<trip origin="POWL" destination="16TH" fare="1.85" origTimeMin="8:55 PM"
+				origTimeDate="09/06/2014 " destTimeMin="8:58 PM" destTimeDate="09/06/2014"
+				clipper="0.65">
+				<leg order="1" transfercode="" origin="POWL" destination="16TH"
+					origTimeMin="8:55 PM" origTimeDate="09/06/2014" destTimeMin="8:58 PM"
+					destTimeDate="09/06/2014" line="ROUTE 1" bikeflag="1"
+					trainHeadStation="MLBR" trainIdx="44" />
+			</trip>
+			<trip origin="POWL" destination="16TH" fare="1.85" origTimeMin="9:09 PM"
+				origTimeDate="09/06/2014 " destTimeMin="9:12 PM" destTimeDate="09/06/2014"
+				clipper="0.65">
+				<leg order="1" transfercode="" origin="POWL" destination="16TH"
+					origTimeMin="9:09 PM" origTimeDate="09/06/2014" destTimeMin="9:12 PM"
+					destTimeDate="09/06/2014" line="ROUTE 11" bikeflag="1"
+					trainHeadStation="DALY" trainIdx="45" />
+			</trip>
+		</request>
+	</schedule>
+	<message>
+		<co2_emissions><![CDATA[<p>CO<sub>2</sub> emissions saved by this BART trip: <strong>1.2 pounds.</strong> <a href="http://www.bart.gov/guide/carbon.aspx">Read more</a></p>]]></co2_emissions>
+	</message>
+</root>
