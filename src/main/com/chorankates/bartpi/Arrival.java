@@ -36,6 +36,12 @@ public class Arrival {
         // allow this to be built up incrementally
     }
 
+    // TODO this in Trip.java
+    public boolean validateArrival() {
+        // TODO implement something that validates we have (or do not) all attributes supplied
+        return false;
+    }
+
     public String toString() {
 
         String tripTime;

@@ -2,8 +2,6 @@ package com.chorankates.bartpi;
 
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-
 public class Route {
 
     private String originName;

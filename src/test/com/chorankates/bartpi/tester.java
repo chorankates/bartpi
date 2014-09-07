@@ -2,12 +2,19 @@ package com.chorankates.bartpi;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import org.junit.*;
 
 public class tester {
 
-    public static void main(String[] args) throws IOException {
-        BartPI bpi = new BartPI();
+    static BartPI bpi;
+
+    @BeforeClass
+    public static void setup() {
+        bpi = new BartPI();
+    }
+
+    @Test
+    public void testGetStations() {
 
         Stations stations = bpi.getStations();
 
@@ -16,7 +23,10 @@ public class tester {
 
             System.out.println(String.format("%s: %s (%s)", name, station.getAbbreviation(), station.getCity()));
         }
+    }
 
+    @Test
+    public void testWorkflow() throws IOException {
         Profile workProfile = new Profile("leaving-work");
         workProfile.addRoute(new Route("Embarcadero", "Powell St.", "conor"));
         workProfile.addRoute(new Route("Embarcadero", "16th St. Mission", "pj"));

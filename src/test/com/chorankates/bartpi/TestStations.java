@@ -19,7 +19,7 @@ public class TestStations {
     public static void setup() {
         bpi = new BartPI();
         stations = bpi.getStations();
-        station = bpi.getStations().getStation(stationName);
+        station = stations.getStation(stationName);
     }
 
     @Test
@@ -27,7 +27,6 @@ public class TestStations {
         Assert.assertEquals(stations.stationAbbreviationToName(station.getAbbreviation()), stationName);
 
         // loop through the entire collection?
-        // need some negative tests
     }
 
     @Test
@@ -54,6 +53,32 @@ public class TestStations {
             Assert.assertTrue("correct exception thrown", true);
         } catch (Exception e) {
             Assert.assertTrue("correct exception thrown", false);
+        }
+    }
+
+    @Test
+    public void testAbbreviationNormalizer() {
+        try {
+            String fromName         = stations.stationAbbreviation(stationName);
+            String fromAbbreviation = stations.stationAbbreviation(stationAbbreviation);
+
+            Assert.assertEquals(fromAbbreviation, fromName);
+            Assert.assertEquals(stationAbbreviation, fromName);
+        } catch (Exception e) {
+            Assert.assertTrue("no exception thrown", false);
+        }
+    }
+
+    @Test
+    public void testNameNormalizer() {
+        try {
+            String fromName         = stations.stationName(stationName);
+            String fromAbbreviation = stations.stationName(stationAbbreviation);
+
+            Assert.assertEquals(fromAbbreviation, fromName);
+            Assert.assertEquals(stationName, fromName);
+        } catch (Exception e) {
+            Assert.assertTrue("no exception thrown", false);
         }
     }
 

@@ -12,8 +12,11 @@
     <description>library for interacting with the BART API</description>
 
     <properties>
-        <log.stdout.level>DEBUG</log.stdout.level>
+        <!-- why are we getting double output? -->
+        <log.stdout.level>TRACE</log.stdout.level>
         <log.stderr.level>WARN</log.stderr.level>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- this feels like it should be in <build> .. -->
     </properties>
 
     <dependencies>
