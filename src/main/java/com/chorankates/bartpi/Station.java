@@ -17,7 +17,7 @@ public class Station {
     String state; // really
     String zipcode;
 
-    Logger log = Logger.getLogger(Station.class.getName());
+    private static Logger log = Logger.getLogger(Station.class.getName());
 
     public Station() {
         // allow this to be built up incrementally

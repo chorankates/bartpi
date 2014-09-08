@@ -39,19 +39,19 @@ public class tester {
 
         ArrayList<Profile> profileList = new ArrayList<Profile>();
         profileList.add(workProfile);
-        profileList.add(personalProfile);
+        //profileList.add(personalProfile);
 
         for (Profile profile : profileList) {
 
             for (Route route : profile.getRoutes()) {
-                Arrivals arrivals = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
-                Departures departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
+                ArrayList<Trip> arrivals = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
+                ArrayList<Trip> departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
 
-                for (Arrival arrival : arrivals.getArrivals()) {
+                for (Trip arrival : arrivals) {
                     System.out.println(arrival.toString());
                 }
 
-                for (Departure departure : departures.getDepartures()) {
+                for (Trip departure : departures) {
                     System.out.println(departure.toString());
                 }
             }

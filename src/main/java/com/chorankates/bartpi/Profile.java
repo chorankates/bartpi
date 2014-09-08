@@ -13,7 +13,7 @@ public class Profile {
     String name;
     Station defaultStation; // for the scenario where you care about many trips departing from a single location
 
-    Logger log = Logger.getLogger(Profile.class.getName());
+    private static Logger log = Logger.getLogger(Profile.class.getName());
     ArrayList<Route> routeList = new ArrayList<Route>();
 
     Profile (String name) {

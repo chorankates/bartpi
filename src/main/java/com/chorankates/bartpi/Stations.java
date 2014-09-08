@@ -21,11 +21,10 @@ import org.xml.sax.InputSource;
  */
 public class Stations {
 
-    HashMap<String, Station> stationCollection   = new HashMap<String, Station>();
-    HashMap<String, String> stationNames         = new HashMap<String, String>();
-    HashMap<String, String> stationAbbreviations = new HashMap<String, String>();
-    
-    Logger log = Logger.getLogger(Stations.class.getName());
+    private static Logger log = Logger.getLogger(Stations.class.getName());
+    private HashMap<String, Station> stationCollection = new HashMap<String, Station>();
+    private HashMap<String, String> stationNames         = new HashMap<String, String>();
+    private HashMap<String, String> stationAbbreviations = new HashMap<String, String>();
 
     public Station getStation(String name) {
         return stationCollection.get(name);

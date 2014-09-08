@@ -1,133 +1,130 @@
 package com.chorankates.bartpi;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by conor on 9/4/14.
  */
-public class Departure {
+public class Departure extends Trip {
 
-    String origin;
-    String destination;
-    String fare; // should this just be a double?
-    String origTimeMin; // h:mm ?m
-    String origTimeDate; // mm/dd/yyyy
-    String destTimeMin;
-    String destTimeDate;
-    Logger log = Logger.getLogger(Departure.class.getName());
+    private static Logger log = Logger.getLogger(Departure.class.getName());
 
-    ArrayList<Leg> legs = new ArrayList<Leg>();
-
-    public void addLeg(Leg newLeg) {
-        log.info(String.format("adding leg[%s] [%s->%s]", newLeg.getOrder(), newLeg.getOrigin(),
-                newLeg.getDestination()));
-
-        legs.add(newLeg);
+    Departure (Route route) {
+        this.route = route;
     }
 
-    public Departure() {
-        // allow this to be built up incrementally
+    Departure () {
+
     }
 
-    public String toString() {
+    public static ArrayList<Trip> parseDeparturesXML(String xml) {
 
-        String tripTime;
-        String leaveTime;
-
+    	ArrayList<Trip> departures = new ArrayList<Trip>();
+    	
         try {
-            tripTime = this.getTripTime();
-        } catch (ParseException e) {
-            tripTime = "unknown";
-            log.error(e.getMessage());
+            DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            Document doc = db.parse(new InputSource(new StringReader(xml)));
+
+            NodeList nodes = doc.getDocumentElement().getChildNodes();
+
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Element element = (Element) nodes.item(i);
+                log.trace(String.format("element: %s", element.getTagName()));
+
+                if (element.getTagName().equals("schedule")) {
+                    NodeList childNodes = element.getChildNodes();
+
+                    for (int j = 0; j < childNodes.getLength(); j++) {
+                        Element childElement = (Element) childNodes.item(j);
+
+                        log.trace(String.format("childElement: %s", childElement.getTagName()));
+
+                        if (childElement.getTagName().equals("request")) {
+                            NodeList grandChildNodes = childElement.getChildNodes();
+
+                            for (int k = 0; k < grandChildNodes.getLength(); k++) {
+                                Element grandChildElement = (Element) grandChildNodes.item(k);
+
+                                log.trace(String.format("grandChildElement: %s", grandChildElement.getTagName()));
+
+                                NodeList greatGrandChildrenNodes = grandChildElement.getChildNodes();
+
+                                if (grandChildElement.getTagName().equals("trip")) {
+
+                                    Departure newDeparture = new Departure();
+
+                                    newDeparture.setOrigin(grandChildElement.getAttributeNode("origin").getNodeValue());
+                                    newDeparture.setDestination(grandChildElement.getAttributeNode("destination").getNodeValue());
+
+                                    newDeparture.fare = grandChildElement.getAttributeNode("fare").getNodeValue();
+                                    newDeparture.origTimeMin = grandChildElement.getAttributeNode("origTimeMin")
+                                            .getNodeValue();
+                                    newDeparture.origTimeDate = grandChildElement.getAttributeNode("origTimeDate")
+                                            .getNodeValue();
+                                    newDeparture.destTimeMin = grandChildElement.getAttributeNode("destTimeMin")
+                                            .getNodeValue();
+                                    newDeparture.destTimeDate = grandChildElement.getAttributeNode("destTimeDate")
+                                            .getNodeValue();
+
+                                    for (int l = 0; l < greatGrandChildrenNodes.getLength(); l++) {
+                                        Element greatGrandChildElement = (Element) greatGrandChildrenNodes.item(l);
+
+                                        log.trace(String.format("greatGrandChildElement: %s",
+                                                greatGrandChildElement.getTagName()));
+
+                                        if (greatGrandChildElement.getTagName().equals("leg")) {
+                                            Leg newLeg = new Leg();
+
+                                            newLeg.order = greatGrandChildElement.getAttributeNode("order")
+                                                    .getNodeValue();
+                                            newLeg.transferCode = greatGrandChildElement.getAttributeNode(
+                                                    "transfercode").getNodeValue();
+                                            newLeg.origin = greatGrandChildElement.getAttributeNode("origin")
+                                                    .getNodeValue();
+                                            newLeg.destination = greatGrandChildElement.getAttributeNode("destination")
+                                                    .getNodeValue();
+                                            newLeg.origTimeMin = greatGrandChildElement.getAttributeNode("origTimeMin")
+                                                    .getNodeValue();
+                                            newLeg.origTimeDate = greatGrandChildElement.getAttributeNode(
+                                                    "origTimeDate").getNodeValue();
+                                            newLeg.destTimeMin = greatGrandChildElement.getAttributeNode("destTimeMin")
+                                                    .getNodeValue();
+                                            newLeg.destTimeDate = greatGrandChildElement.getAttributeNode(
+                                                    "destTimeDate").getNodeValue();
+                                            newLeg.line = greatGrandChildElement.getAttributeNode("line")
+                                                    .getNodeValue();
+                                            newLeg.bikeFlag = greatGrandChildElement.getAttributeNode("bikeflag")
+                                                    .getNodeValue();
+                                            newLeg.trainHeadStation = greatGrandChildElement.getAttributeNode(
+                                                    "trainHeadStation").getNodeValue();
+                                            newLeg.trainIdx = greatGrandChildElement.getAttributeNode("trainIdx")
+                                                    .getNodeValue();
+
+                                            newDeparture.addLeg(newLeg);
+                                        }
+                                    }
+
+                                    departures.add(newDeparture);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        try {
-            leaveTime = this.getTimeUntilTrip();
-        } catch (ParseException e) {
-            leaveTime = "unknown";
-            log.error(e.getMessage());
-        }
-
-        return String.format("[%s->%s] [%s->%s] ($%s, %s) (leaves station in %s)", this.getOrigin(),
-                this.getDestination(), this.getOrigTimeMin(), this.getDestTimeMin(), this.getFare(), tripTime,
-                leaveTime);
+        
+        return departures;
     }
-
-    public Departure(Departures departures, int index) {
-
-        Departure departure = departures.getDeparture(index);
-
-        origin = departure.getOrigin();
-        destination = departure.getDestination();
-        fare = departure.getFare();
-        origTimeMin = departure.getOrigTimeMin();
-        origTimeDate = departure.getOrigTimeDate();
-        destTimeMin = departure.getDestTimeMin();
-        destTimeDate = departure.getDestTimeDate();
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public String getFare() {
-        return fare;
-    }
-
-    public String getOrigTimeMin() {
-        return origTimeMin;
-    }
-
-    public String getOrigTimeDate() {
-        return origTimeDate;
-    }
-
-    public String getDestTimeMin() {
-        return destTimeMin;
-    }
-
-    public String getDestTimeDate() {
-        return destTimeDate;
-    }
-
-    public Date getOriginTime() throws ParseException {
-        String input = String.format("%s %s", this.origTimeMin, this.origTimeDate);
-        DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");
-        Date date = (Date) formatter.parse(input);
-        return date;
-    }
-
-    public Date getDestinationTime() throws ParseException {
-        String input = String.format("%s %s", this.destTimeMin, this.destTimeDate);
-        DateFormat formatter = new SimpleDateFormat("h:mm a MM/dd/yyyy");
-        Date date = (Date) formatter.parse(input);
-        return date;
-    }
-
-    public String getTripTime() throws ParseException {
-        Date tripStart = this.getOriginTime();
-        Date tripStop = this.getDestinationTime();
-
-        // TODO support more than just minutes..
-        return String.format("%s minutes", (tripStop.getTime() - tripStart.getTime()) / 1000 / 60);
-    }
-
-    public String getTimeUntilTrip() throws ParseException {
-        Date timeNow = new Date();
-        Date tripStart = this.getOriginTime();
-
-        // TODO support more than just minutes..
-        return String.format("%s minutes", (tripStart.getTime() - timeNow.getTime()) / 1000 / 60);
-    }
-
 }
