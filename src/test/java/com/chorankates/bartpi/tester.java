@@ -37,9 +37,16 @@ public class tester {
         personalProfile.addRoute(new Route("Powell St.", "Rockridge", "eb"));
         personalProfile.addRoute(new Route("Powell St.", "16th St. Mission", "pj"));
 
+        Profile duplicateProfile = new Profile("duplicate");
+        duplicateProfile.addRoute(new Route("Powell St.", "Embarcadero", "foo1"));
+        duplicateProfile.addRoute(new Route("Powell St.", "Embarcadero", "foo2"));
+
         ArrayList<Profile> profileList = new ArrayList<Profile>();
         profileList.add(workProfile);
-        //profileList.add(personalProfile);
+        profileList.add(personalProfile);
+        profileList.add(workProfile);
+        profileList.add(personalProfile);
+        profileList.add(duplicateProfile);
 
         for (Profile profile : profileList) {
 
@@ -47,15 +54,18 @@ public class tester {
                 ArrayList<Trip> arrivals = bpi.getArrivals(route.getOriginName(), route.getDestinationName());
                 ArrayList<Trip> departures = bpi.getDepartures(route.getOriginName(), route.getDestinationName());
 
+                System.out.println("arrivals: ");
                 for (Trip arrival : arrivals) {
                     System.out.println(arrival.toString());
                 }
 
-                for (Trip departure : departures) {
+                System.out.println("departures: ");
+                for (Trip departure: departures) {
                     System.out.println(departure.toString());
                 }
             }
         }
-    }
 
+        System.out.println("endup");
+    }
 }
