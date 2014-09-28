@@ -13,6 +13,9 @@ public class Route {
 
     // TODO we need to validate that these are valid names (or codes, and then we need to translate)
     Route (String originName, String destinationName, String routeName) {
+    	
+    	log.debug(String.format("adding route[%s] [%s]->[%s]", routeName, originName, destinationName));
+    	
         this.originName      = originName;
         this.destinationName = destinationName;
         this.routeName       = routeName;

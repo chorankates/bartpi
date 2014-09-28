@@ -27,6 +27,8 @@ public class Station {
 
         Station station = stations.getStation(stationName);
 
+        log.debug(String.format("adding station[%s] to collection", stationName));
+
         name         = station.getName();
         abbreviation = station.getAbbreviation();
         latitude     = station.getLatitude();

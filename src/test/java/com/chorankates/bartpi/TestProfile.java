@@ -3,46 +3,52 @@ package com.chorankates.bartpi;
 import org.junit.*;
 
 import java.io.IOException;
-import java.text.ParseException;
 
 /**
  * Created by conor on 9/28/14.
  */
 public class TestProfile {
 
-    private static BartPI bpi;
-    private Profile kgProfile = new Profile("foo");
-    private Route kgRoute = new Route("EMBR", "POWL", "home");
+    private static Profile kgProfile;
+    private static Route kgRoute;
+
+    @BeforeClass
+    public static void setup () throws IOException {
+        kgProfile  = new Profile("foo");
+        kgRoute = new Route("EMBR", "POWL", "home");
+
+        Assert.assertEquals(kgProfile.getRoutes().size(), 0);
+        kgProfile.addRoute(kgRoute);
+    }
 
     @Test
     public void happyPathTest () throws IOException {
-        Assert.assertEquals(kgProfile.getRoutes().size(), 0);
-        kgProfile.addRoute(kgRoute);
         Assert.assertEquals(kgProfile.getRoutes().size(), 1);
-
-        Route byIndex = kgProfile.getRoute(0);
-        Assert.assertEquals(kgRoute, byIndex);
 
         Route byName = kgProfile.getRoute("home");
         Assert.assertEquals(kgRoute, byName);
     }
 
-    @Test
-    public void badInputGetRouteTest () throws IOException {
-        // TODO do we actually want to catch these? these should be private anyway, right?
-        //Route byIndexDNE = kgProfile.getRoute(100);
-        //Route byIndexNegative = kgProfile.getRoute(-100);
+    @Test(expected = IOException.class)
+    public void badInputGetRouteByNameTest () throws IOException {
+        Route byNameDne = kgProfile.getRoute("fizzy");
+    }
 
-        // TODO assure the correct IO exception is thrown
-        //Route byStringDNE = kgProfile.getRoute("fizzy");
+    @Test(expected = IOException.class)
+    public void addDuplicateRouteNameTest () throws  IOException {
+        Route duplicateName = new Route("POWL", "EMBR", "home");
+        kgProfile.addRoute(duplicateName);
+    }
+
+    @Test(expected = IOException.class)
+    public void addDuplciateRouteTest () throws IOException {
+        kgProfile.addRoute(kgRoute);
     }
 
     @Test
-    public void badInputAddRouteTest () {
-        // TODO do we want to allow duplicate routes to be added to a profile? (yes, but not with the same display name)
-        Route duplicateName = new Route("EMBR", "POWL", "home");
-        kgProfile.addRoute(kgRoute);
-        kgProfile.addRoute(duplicateName);
+    public void allowSameTripTest () throws IOException {
+        Route aRoseByAnotherName = new Route("EMBR", "POWL", "rosalind");
+        kgProfile.addRoute(aRoseByAnotherName);
     }
 
 }

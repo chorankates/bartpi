@@ -2,9 +2,6 @@ package com.chorankates.bartpi;
 
 import org.junit.*;
 
-import java.io.IOException;
-import java.text.ParseException;
-
 /**
  * Created by conor on 9/28/14.
  */
