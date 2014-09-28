@@ -18,14 +18,25 @@ public class TestRoute {
 
     private String goodRouteName = "home";
 
+    Route goodRoute = new Route(goodStationName1, goodStationName2, goodRouteName);
+
     @Test
     public void happyPathTest () {
-        Route goodRoute = new Route(goodStationName1, goodStationName2, goodRouteName);
-
         Assert.assertEquals(goodStationName1, goodRoute.getOriginName());
         Assert.assertEquals(goodStationName2, goodRoute.getDestinationName());
         Assert.assertEquals(goodRouteName,    goodRoute.getRouteName());
+    }
 
+    @Test
+    public void changeItUpTest () {
+        goodRoute.setRouteName("reverse");
+        Assert.assertEquals(goodRoute.getRouteName(), "reverse");
+
+        goodRoute.setOriginName(goodStationName2);
+        goodRoute.setDestinationName(goodStationName1);
+
+        Assert.assertEquals(goodStationName2, goodRoute.getOriginName());
+        Assert.assertEquals(goodStationName1, goodRoute.getDestinationName());
     }
 
     @Test
@@ -42,6 +53,8 @@ public class TestRoute {
         Assert.assertEquals(goodStationName1, goodRouteByCode.getOriginName());
         Assert.assertEquals(goodStationName2, goodRouteByCode.getDestinationName());
         Assert.assertEquals(goodRouteName,    goodRouteByCode.getRouteName());
+
+        // TODO this also needs to handle the change case - or we need to rethink the model
     }
 
 }

@@ -28,14 +28,21 @@ public class TestProfile {
     }
 
     @Test
-    public void badInputTest () throws IOException {
+    public void badInputGetRouteTest () throws IOException {
         // TODO do we actually want to catch these? these should be private anyway, right?
         //Route byIndexDNE = kgProfile.getRoute(100);
         //Route byIndexNegative = kgProfile.getRoute(-100);
 
         // TODO assure the correct IO exception is thrown
         //Route byStringDNE = kgProfile.getRoute("fizzy");
+    }
 
+    @Test
+    public void badInputAddRouteTest () {
+        // TODO do we want to allow duplicate routes to be added to a profile? (yes, but not with the same display name)
+        Route duplicateName = new Route("EMBR", "POWL", "home");
+        kgProfile.addRoute(kgRoute);
+        kgProfile.addRoute(duplicateName);
     }
 
 }
