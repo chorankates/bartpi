@@ -11,6 +11,7 @@ public class Route {
 
     private static Logger log = Logger.getLogger(Route.class.getName());
 
+    // TODO we need to validate that these are valid names (or codes, and then we need to translate)
     Route (String originName, String destinationName, String routeName) {
         this.originName      = originName;
         this.destinationName = destinationName;
