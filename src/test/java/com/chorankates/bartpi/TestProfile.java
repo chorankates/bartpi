@@ -16,8 +16,6 @@ public class TestProfile {
     public static void setup () throws IOException {
         kgProfile  = new Profile("foo");
         kgRoute = new Route("EMBR", "POWL", "home");
-
-        Assert.assertEquals(kgProfile.getRoutes().size(), 0);
         kgProfile.addRoute(kgRoute);
     }
 
@@ -27,6 +25,8 @@ public class TestProfile {
 
         Route byName = kgProfile.getRoute("home");
         Assert.assertEquals(kgRoute, byName);
+
+        Assert.assertTrue(kgProfile.getRouteNames().contains("home"));
     }
 
     @Test(expected = IOException.class)

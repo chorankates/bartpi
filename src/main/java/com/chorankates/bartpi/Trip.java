@@ -19,9 +19,6 @@ public class Trip {
     ArrayList<Arrival> arrivals;
     ArrayList<Departure> departures;
 
-    //Arrivals arrivals;
-    //Departures departures;
-
     String fare; // should this just be a double?
     String origTimeMin; // h:mm ?m
     String origTimeDate; // mm/dd/yyyy
